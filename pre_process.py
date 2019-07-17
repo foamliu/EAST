@@ -17,11 +17,11 @@ if __name__ == "__main__":
     train = random.sample(samples, num_train)
     print('num_train: ' + str(len(train)))
 
-    valid = [f for f in images if f not in train]
+    valid = [f for f in samples if f not in train]
     print('num_valid: ' + str(len(valid)))
 
     with open('train.json', 'w') as file:
-        json.dump(train, file)
+        json.dump(train, file, indent=4)
 
     with open('valid.json', 'w') as file:
-        json.dump(valid, file)
+        json.dump(valid, file, indent=4)
