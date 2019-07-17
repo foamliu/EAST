@@ -90,6 +90,7 @@ def parse_args():
     parser.add_argument('--batch-size', type=int, default=32, help='batch size in each context')
     parser.add_argument('--checkpoint', type=str, default=None, help='checkpoint')
     parser.add_argument('--pretrained', type=bool, default=True, help='pretrained model')
+    parser.add_argument('--network', default='r50', help='specify network')
     args = parser.parse_args()
     return args
 
