@@ -5,7 +5,7 @@ import torch.utils.model_zoo as model_zoo
 from torch import nn
 from torchsummary import summary
 
-from config import device
+from config import device, im_size
 from utils import parse_args
 
 __all__ = ['ResNet', 'resnet18', 'resnet34', 'resnet50', 'resnet101', 'resnet152']
@@ -245,7 +245,7 @@ class EastModel(nn.Module):
         score = self.conv8(g)  # bs 1 w/4 h/4
         score = self.sigmoid(score)
         geo_map = self.conv9(g)
-        geo_map = self.sigmoid(geo_map) * 512
+        geo_map = self.sigmoid(geo_map) * im_size
         angle_map = self.conv10(g)
         angle_map = self.sigmoid(angle_map)
         angle_map = (angle_map - 0.5) * math.pi / 2

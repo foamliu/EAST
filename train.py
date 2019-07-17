@@ -15,7 +15,7 @@ def train_net(args):
     np.random.seed(7)
     checkpoint = args.checkpoint
     start_epoch = 0
-    best_acc = 0
+    best_loss = float("inf")
     writer = SummaryWriter()
     epochs_since_improvement = 0
 
@@ -73,7 +73,6 @@ def train_net(args):
             checkpoint = 'BEST_checkpoint.tar'
             checkpoint = torch.load(checkpoint)
             model = checkpoint['model']
-            metric_fc = checkpoint['metric_fc']
             optimizer = checkpoint['optimizer']
 
             adjust_learning_rate(optimizer, 0.5)
@@ -96,15 +95,14 @@ def train_net(args):
         valid_loss, valid_top1_accs = valid(valid_loader=valid_loader,
                                             model=model,
                                             criterion=criterion,
-                                            optimizer=optimizer,
                                             epoch=epoch,
                                             logger=logger)
         writer.add_scalar('Valid_Loss', valid_loss, epoch)
         writer.add_scalar('Valid_Top1_Accuracy', valid_top1_accs, epoch)
 
         # Check if there was an improvement
-        is_best = megaface_acc > best_acc
-        best_acc = max(megaface_acc, best_acc)
+        is_best = valid_loss < best_loss
+        best_loss = min(valid_loss, best_loss)
         if not is_best:
             epochs_since_improvement += 1
             print("\nEpochs since last improvement: %d\n" % (epochs_since_improvement,))
@@ -112,7 +110,7 @@ def train_net(args):
             epochs_since_improvement = 0
 
         # Save checkpoint
-        save_checkpoint(epoch, epochs_since_improvement, model, optimizer, best_acc, is_best)
+        save_checkpoint(epoch, epochs_since_improvement, model, optimizer, best_loss, is_best)
 
 
 def train(train_loader, model, criterion, optimizer, epoch, logger):
@@ -159,14 +157,14 @@ def train(train_loader, model, criterion, optimizer, epoch, logger):
     return losses.avg, top1_accs.avg
 
 
-def valid(train_loader, model, criterion, epoch, logger):
+def valid(valid_loader, model, criterion, epoch, logger):
     model.eval()  # train mode (dropout and batchnorm is used)
 
     losses = AverageMeter()
     top1_accs = AverageMeter()
 
     # Batches
-    for i, (img, label) in enumerate(train_loader):
+    for i, (img, label) in enumerate(valid_loader):
         # Move to GPU, if available
         img = img.to(device)
         label = label.to(device)  # [N, 1]
@@ -179,14 +177,14 @@ def valid(train_loader, model, criterion, epoch, logger):
 
         # Keep track of metrics
         losses.update(loss.item())
-        top1_accuracy = accuracy(output, label, 15)
+        top1_accuracy = accuracy(output, label, 1)
         top1_accs.update(top1_accuracy)
 
         # Print status
         if i % print_freq == 0:
             logger.info('Epoch: [{0}][{1}/{2}]\t'
                         'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
-                        'Top1 Accuracy {top1_accs.val:.3f} ({top1_accs.avg:.3f})'.format(epoch, i, len(train_loader),
+                        'Top1 Accuracy {top1_accs.val:.3f} ({top1_accs.avg:.3f})'.format(epoch, i, len(valid_loader),
                                                                                          loss=losses,
                                                                                          top1_accs=top1_accs))
 
