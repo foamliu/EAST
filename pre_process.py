@@ -5,7 +5,7 @@ import random
 from config import num_train
 
 if __name__ == "__main__":
-    images = [f for f in os.listdir('data') if f.endswith('jpg')]
+    images = [f for f in os.listdir('data') if f.startswith('img_') and f.endswith('jpg')]
     print('num_samples: ' + str(len(images)))
 
     samples = []

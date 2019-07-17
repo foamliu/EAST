@@ -250,8 +250,8 @@ class EastModel(nn.Module):
         angle_map = self.sigmoid(angle_map)
         angle_map = (angle_map - 0.5) * math.pi / 2
 
-        geometry = torch.cat((geo_map, angle_map), 1)  # bs 5 w/4 w/4
-        return score, geometry
+        geo = torch.cat((geo_map, angle_map), 1)  # bs 5 w/4 w/4
+        return score, geo
 
 
 if __name__ == "__main__":
