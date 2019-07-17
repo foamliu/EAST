@@ -4,10 +4,10 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')  # sets de
 
 im_size = 320
 
-num_samples = 43100
-num_train = 34480
-# num_samples - num_train_samples
-num_valid = 8620
+train_ratio = 0.9
+num_samples = 1229
+num_train = int(num_samples * 0.9)
+num_valid = num_samples - num_train
 
 # Training parameters
 num_workers = 1  # for data-loading; right now, only 1 works with h5py

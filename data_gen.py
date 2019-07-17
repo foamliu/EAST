@@ -1,64 +1,49 @@
-import random
+import json
+import os
 
-import numpy as np
-import torch
+import cv2 as cv
 from torch.utils.data import Dataset
 from torchvision import transforms
 
-from config import im_size
+# Data augmentation and normalization for training
+# Just normalization for validation
+data_transforms = {
+    'train': transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+    ]),
+    'valid': transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ]),
+}
 
 
 class EastDataset(Dataset):
     def __init__(self, split):
         self.split = split
 
-        filename = '{}_names.txt'.format(split)
+        filename = '{}.json'.format(split)
         with open(filename, 'r') as file:
-            self.names = file.read().splitlines()
+            self.samples = json.load(file)
 
         self.transformer = data_transforms[split]
 
     def __getitem__(self, i):
-        name = self.names[i]
-        fcount = int(name.split('.')[0].split('_')[0])
-        bcount = int(name.split('.')[0].split('_')[1])
-        im_name = fg_files[fcount]
-        bg_name = bg_files[bcount]
-        img, alpha, fg, bg = process(im_name, bg_name)
-
-        # crop size 320:640:480 = 1:1:1
-        different_sizes = [(320, 320), (480, 480), (640, 640)]
-        crop_size = random.choice(different_sizes)
-
-        trimap = gen_trimap(alpha)
-        x, y = random_choice(trimap, crop_size)
-        img = safe_crop(img, x, y, crop_size)
-        alpha = safe_crop(alpha, x, y, crop_size)
-
-        trimap = gen_trimap(alpha)
-
-        # Flip array left to right randomly (prob=1:1)
-        if np.random.random_sample() > 0.5:
-            img = np.fliplr(img)
-            trimap = np.fliplr(trimap)
-            alpha = np.fliplr(alpha)
-
-        x = torch.zeros((4, im_size, im_size), dtype=torch.float)
+        sample = self.samples[i]
+        filename = os.path.join('data', sample['img'])
+        img = cv.imread(filename)
+        img = img[..., ::-1]  # RGB
         img = transforms.ToPILImage()(img)
         img = self.transformer(img)
-        x[0:3, :, :] = img
-        x[3, :, :] = torch.from_numpy(trimap.copy()) / 255.
+        label = sample['gt']
 
-        y = np.empty((2, im_size, im_size), dtype=np.float32)
-        y[0, :, :] = alpha / 255.
-        mask = np.equal(trimap, 128).astype(np.float32)
-        y[1, :, :] = mask
-
-        return x, y
+        return img, label
 
     def __len__(self):
-        return len(self.names)
+        return len(self.samples)
 
 
 if __name__ == "__main__":
     dataset = EastDataset('train')
+    print(dataset[0])
