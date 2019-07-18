@@ -1,12 +1,12 @@
-import json
 import os
 
 import cv2 as cv
+import numpy as np
 from torch.utils.data import Dataset
 from torchvision import transforms
 
-from config import im_size
-from icdar import load_annoataion
+from config import im_size, training_data_path
+from icdar import load_annoataion, get_images
 
 # Data augmentation and normalization for training
 # Just normalization for validation
@@ -27,9 +27,9 @@ class EastDataset(Dataset):
     def __init__(self, split):
         self.split = split
 
-        filename = '{}.json'.format(split)
-        with open(filename, 'r') as file:
-            self.samples = json.load(file)
+        image_list = np.array(get_images())
+        print('{} training images in {}'.format(
+            image_list.shape[0], training_data_path))
 
         self.transformer = data_transforms[split]
 

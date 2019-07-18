@@ -8,32 +8,16 @@ import cv2
 import matplotlib.patches as Patches
 import matplotlib.pyplot as plt
 import numpy as np
-import tensorflow as tf
 from shapely.geometry import Polygon
 
-tf.app.flags.DEFINE_string('training_data_path', '/data/ocr/icdar2015/',
-                           'training dataset to use')
-tf.app.flags.DEFINE_integer('max_image_large_side', 1280,
-                            'max image size of training')
-tf.app.flags.DEFINE_integer('max_text_size', 800,
-                            'if the text in the input image is bigger than this, then we resize'
-                            'the image according to this')
-tf.app.flags.DEFINE_integer('min_text_size', 10,
-                            'if the text size is smaller than this, we ignore it during training')
-tf.app.flags.DEFINE_float('min_crop_side_ratio', 0.1,
-                          'when doing random crop from input image, the'
-                          'min length of min(H, W')
-tf.app.flags.DEFINE_string('geometry', 'RBOX',
-                           'which geometry to generate, RBOX or QUAD')
-
-FLAGS = tf.app.flags.FLAGS
+from config import training_data_path, min_text_size, geometry, min_crop_side_ratio
 
 
 def get_images():
     files = []
     for ext in ['jpg', 'png', 'jpeg', 'JPG']:
         files.extend(glob.glob(
-            os.path.join(FLAGS.training_data_path, '*.{}'.format(ext))))
+            os.path.join(training_data_path, '*.{}'.format(ext))))
     return files
 
 
@@ -147,7 +131,7 @@ def crop_area(im, polys, tags, crop_background=False, max_tries=50):
         ymax = np.max(yy) - pad_h
         ymin = np.clip(ymin, 0, h - 1)
         ymax = np.clip(ymax, 0, h - 1)
-        if xmax - xmin < FLAGS.min_crop_side_ratio * w or ymax - ymin < FLAGS.min_crop_side_ratio * h:
+        if xmax - xmin < min_crop_side_ratio * w or ymax - ymin < min_crop_side_ratio * h:
             # area too small
             continue
         if polys.shape[0] != 0:
@@ -479,7 +463,7 @@ def generate_rbox(im_size, polys, tags):
         # if the poly is too small, then ignore it during training
         poly_h = min(np.linalg.norm(poly[0] - poly[3]), np.linalg.norm(poly[1] - poly[2]))
         poly_w = min(np.linalg.norm(poly[0] - poly[1]), np.linalg.norm(poly[2] - poly[3]))
-        if min(poly_h, poly_w) < FLAGS.min_text_size:
+        if min(poly_h, poly_w) < min_text_size:
             cv2.fillPoly(training_mask, poly.astype(np.int32)[np.newaxis, :, :], 0)
         if tag:
             cv2.fillPoly(training_mask, poly.astype(np.int32)[np.newaxis, :, :], 0)
@@ -583,7 +567,7 @@ def generator(input_size=512, batch_size=32,
               vis=False):
     image_list = np.array(get_images())
     print('{} training images in {}'.format(
-        image_list.shape[0], FLAGS.training_data_path))
+        image_list.shape[0], training_data_path))
     index = np.arange(0, image_list.shape[0])
     while True:
         np.random.shuffle(index)
@@ -627,7 +611,7 @@ def generator(input_size=512, batch_size=32,
                     im_padded[:new_h, :new_w, :] = im.copy()
                     im = cv2.resize(im_padded, dsize=(input_size, input_size))
                     score_map = np.zeros((input_size, input_size), dtype=np.uint8)
-                    geo_map_channels = 5 if FLAGS.geometry == 'RBOX' else 8
+                    geo_map_channels = 5 if geometry == 'RBOX' else 8
                     geo_map = np.zeros((input_size, input_size, geo_map_channels), dtype=np.float32)
                     training_mask = np.ones((input_size, input_size), dtype=np.uint8)
                 else:
