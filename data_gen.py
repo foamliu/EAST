@@ -42,7 +42,7 @@ class EastDataset(Dataset):
         # print im_fn
         h, w, _ = im.shape
         txt_fn = im_fn.replace(self.data_path, '')
-        txt_fn = os.path.join(training_data_path, 'gt_' + txt_fn.split('.')[0] + '.txt')
+        txt_fn = os.path.join(self.data_path, 'gt_' + txt_fn.split('.')[0] + '.txt')
         assert (os.path.exists(txt_fn))
 
         text_polys, text_tags = load_annoataion(txt_fn)
