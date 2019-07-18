@@ -113,4 +113,5 @@ class EastDataset(Dataset):
 
 if __name__ == "__main__":
     dataset = EastDataset('test')
-    print(dataset[0][1])
+    score_map = dataset[0][1]
+    print(score_map.shape)
