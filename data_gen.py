@@ -141,7 +141,7 @@ if __name__ == "__main__":
     # axs[1].imshow(score_map)
     # axs[1].set_xticks([])
     # axs[1].set_yticks([])
-    axs[0, 0].imshow(im[:, :, ::-1])
+    axs[0, 0].imshow(im)
     axs[0, 0].set_xticks([])
     axs[0, 0].set_yticks([])
     for poly in text_polys:
