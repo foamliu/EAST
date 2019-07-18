@@ -38,7 +38,8 @@ class EastDataset(Dataset):
         im = cv.imread(im_fn)
         # print im_fn
         h, w, _ = im.shape
-        txt_fn = 'gt_' + im_fn.split('.')[0] + 'txt'
+        txt_fn = im_fn.replace(training_data_path, '')
+        txt_fn = os.path.join(training_data_path, 'gt_' + txt_fn.split('.')[0] + 'txt')
         print(txt_fn)
         assert (os.path.exists(txt_fn))
 
