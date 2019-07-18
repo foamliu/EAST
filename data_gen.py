@@ -105,6 +105,10 @@ class EastDataset(Dataset):
         training_mask = training_mask[::4, ::4, np.newaxis].astype(np.float32)
         training_mask = training_mask[..., ::-1]
 
+        print(score_map.shape)
+        print(geo_map.shape)
+        print(training_mask.shape)
+
         return im, score_map, geo_map, training_mask
 
     def __len__(self):
