@@ -4,7 +4,7 @@ from tensorboardX import SummaryWriter
 from torch import nn
 
 from config import device, grad_clip, print_freq, num_workers
-from data_gen import EastDataset, collate_fn
+from data_gen import EastDataset
 from loss import LossFunc
 from models import EastModel
 from utils import parse_args, save_checkpoint, AverageMeter, clip_gradient, get_logger, get_learning_rate, \
@@ -49,10 +49,10 @@ def train_net(args):
     # Custom dataloaders
     train_dataset = EastDataset('train')
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True,
-                                               num_workers=num_workers, collate_fn=collate_fn)
+                                               num_workers=num_workers)
     test_dataset = EastDataset('test')
     test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=args.batch_size, shuffle=False,
-                                              num_workers=num_workers, collate_fn=collate_fn)
+                                              num_workers=num_workers)
 
     # Epochs
     for epoch in range(start_epoch, args.end_epoch):
