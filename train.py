@@ -121,7 +121,7 @@ def train(train_loader, model, criterion, optimizer, epoch, logger, scheduler):
         training_mask = training_mask.to(device)
 
         # Forward prop.
-        f_score, f_geometry = model(img)  # embedding => [N, 512]
+        f_score, f_geometry = model(img)
 
         # Calculate loss
         loss = criterion(score_map, f_score, geo_map, f_geometry, training_mask)
@@ -153,16 +153,18 @@ def valid(valid_loader, model, criterion, epoch, logger):
     losses = AverageMeter()
 
     # Batches
-    for i, (img, label) in enumerate(valid_loader):
+    for i, (img, score_map, geo_map, training_mask) in enumerate(valid_loader):
         # Move to GPU, if available
         img = img.to(device)
-        label = label.to(device)  # [N, 1]
+        score_map = score_map.to(device)
+        geo_map = geo_map.to(device)
+        training_mask = training_mask.to(device)
 
         # Forward prop.
-        output = model(img)  # embedding => [N, 512]
+        f_score, f_geometry = model(img)
 
         # Calculate loss
-        loss = criterion(output, label)
+        loss = criterion(score_map, f_score, geo_map, f_geometry, training_mask)
 
         # Keep track of metrics
         losses.update(loss.item())
@@ -170,10 +172,7 @@ def valid(valid_loader, model, criterion, epoch, logger):
         # Print status
         if i % print_freq == 0:
             logger.info('Epoch: [{0}][{1}/{2}]\t'
-                        'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
-                        'Top1 Accuracy {top1_accs.val:.3f} ({top1_accs.avg:.3f})'.format(epoch, i, len(valid_loader),
-                                                                                         loss=losses,
-                                                                                         top1_accs=top1_accs))
+                        'Loss {loss.val:.4f} ({loss.avg:.4f})\t'.format(epoch, i, len(valid_loader), loss=losses))
 
     return losses.avg
 
