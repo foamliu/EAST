@@ -119,9 +119,10 @@ if __name__ == "__main__":
     dataset = EastDataset('test')
     length = len(dataset)
     index = random.randint(0, length - 1)
+    print('index: ' + str(index))
 
     im = dataset[index][0]
-    score_map = dataset[index][1]
+    score_map = dataset[index][1][::, ::, 0]
     geo_map = dataset[index][2]
     training_mask = dataset[index][3]
     text_polys = dataset[index][4]
@@ -138,9 +139,11 @@ if __name__ == "__main__":
             poly, facecolor='none', edgecolor='green', linewidth=2, linestyle='-', fill=True))
         axs[0, 0].text(poly[0, 0], poly[0, 1], '{:.0f}-{:.0f}'.format(poly_h, poly_w), color='purple')
 
-    print(score_map[::, ::, 0])
+    print(score_map.shape)
+    print(np.max(score_map))
+    print(np.min(score_map))
 
-    axs[0, 1].imshow(score_map[::, ::, 0])
+    axs[0, 1].imshow(score_map)
     axs[0, 1].set_xticks([])
     axs[0, 1].set_yticks([])
     axs[1, 0].imshow(geo_map[::, ::, 0])
