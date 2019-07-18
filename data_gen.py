@@ -10,22 +10,22 @@ from icdar import load_annoataion, get_images, check_and_validate_polys, crop_ar
 
 class EastDataset(Dataset):
     def __init__(self, split):
-        self.split = split
-
         if split == 'train':
-            self.image_list = np.array(get_images(training_data_path))
+            self.data_path = training_data_path
         else:
-            self.image_list = np.array(get_images(test_data_path))
+            self.data_path = test_data_path
 
-        print('{} training images in {}'.format(
-            self.image_list.shape[0], training_data_path))
+        self.image_list = np.array(get_images(self.data_path))
+
+        print('{} {} images in {}'.format(
+            self.image_list.shape[0], split, self.data_path))
 
     def __getitem__(self, i):
         im_fn = self.image_list[i]
         im = cv.imread(im_fn)
         # print im_fn
         h, w, _ = im.shape
-        txt_fn = im_fn.replace(training_data_path, '')
+        txt_fn = im_fn.replace(self.data_path, '')
         txt_fn = os.path.join(training_data_path, 'gt_' + txt_fn.split('.')[0] + '.txt')
         assert (os.path.exists(txt_fn))
 
