@@ -3,24 +3,9 @@ import os
 import cv2 as cv
 import numpy as np
 from torch.utils.data import Dataset
-from torchvision import transforms
 
 from config import input_size, training_data_path, test_data_path, background_ratio, random_scale, geometry
 from icdar import load_annoataion, get_images, check_and_validate_polys, crop_area, generate_rbox
-
-# Data augmentation and normalization for training
-# Just normalization for validation
-data_transforms = {
-    'train': transforms.Compose([
-        transforms.ColorJitter(0.5, 0.5, 0.5, 0.25),
-        transforms.ToTensor(),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
-    ]),
-    'valid': transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-    ]),
-}
 
 
 class EastDataset(Dataset):
@@ -34,8 +19,6 @@ class EastDataset(Dataset):
 
         print('{} training images in {}'.format(
             self.image_list.shape[0], training_data_path))
-
-        self.transformer = data_transforms[split]
 
     def __getitem__(self, i):
         im_fn = self.image_list[i]
