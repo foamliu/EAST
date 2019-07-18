@@ -33,8 +33,8 @@ def collate_fn(batch):
     training_masks = []
     for i in range(bs):
         if img[i] is not None:
-            a = torch.from_numpy(img[i])
-            # a = img[i]
+            # a = torch.from_numpy(img[i])
+            a = img[i]
             images.append(a)
 
             b = torch.from_numpy(score_map[i])
