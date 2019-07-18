@@ -27,9 +27,9 @@ class EastDataset(Dataset):
     def __init__(self, split):
         self.split = split
 
-        image_list = np.array(get_images())
+        self.image_list = np.array(get_images())
         print('{} training images in {}'.format(
-            image_list.shape[0], training_data_path))
+            self.image_list.shape[0], training_data_path))
 
         self.transformer = data_transforms[split]
 
@@ -55,7 +55,7 @@ class EastDataset(Dataset):
         return img, text_polys
 
     def __len__(self):
-        return len(self.samples)
+        return len(self.image_list)
 
 
 if __name__ == "__main__":
