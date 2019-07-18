@@ -70,7 +70,6 @@ class EastDataset(Dataset):
             training_mask = np.ones((input_size, input_size), dtype=np.uint8)
         else:
             im, text_polys, text_tags = crop_area(im, text_polys, text_tags, crop_background=False)
-            print(text_polys.shape)
             assert (text_polys.shape[0] > 0)
 
             h, w, _ = im.shape
@@ -92,10 +91,6 @@ class EastDataset(Dataset):
             text_polys[:, :, 1] *= resize_ratio_3_y
             new_h, new_w, _ = im.shape
             score_map, geo_map, training_mask = generate_rbox((new_h, new_w), text_polys, text_tags)
-
-        print(score_map.shape)
-        print(geo_map.shape)
-        print(training_mask.shape)
 
         return im, score_map, geo_map, training_mask
 
