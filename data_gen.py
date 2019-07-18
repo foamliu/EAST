@@ -98,6 +98,10 @@ class EastDataset(Dataset):
         im = transforms.ToPILImage()(im)
         im = self.transformer(im)
 
+        score_map = score_map[::4, ::4, np.newaxis].astype(np.float32)
+        geo_map = geo_map[::4, ::4, :].astype(np.float32)
+        training_mask = training_mask[::4, ::4, np.newaxis].astype(np.float32)
+
         return im, score_map, geo_map, training_mask
 
     def __len__(self):
