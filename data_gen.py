@@ -125,7 +125,6 @@ if __name__ == "__main__":
     geo_map = dataset[index][2]
     training_mask = dataset[index][3]
     text_polys = dataset[index][4]
-    print(score_map.shape)
 
     fig, axs = plt.subplots(3, 2, figsize=(20, 30))
 
@@ -139,11 +138,11 @@ if __name__ == "__main__":
             poly, facecolor='none', edgecolor='green', linewidth=2, linestyle='-', fill=True))
         axs[0, 0].text(poly[0, 0], poly[0, 1], '{:.0f}-{:.0f}'.format(poly_h, poly_w), color='purple')
 
-    print(score_map[::, ::].shape)
+    print(score_map[::, ::])
 
-    # axs[0, 1].imshow(score_map[::, ::])
-    # axs[0, 1].set_xticks([])
-    # axs[0, 1].set_yticks([])
+    axs[0, 1].imshow(score_map[::, ::])
+    axs[0, 1].set_xticks([])
+    axs[0, 1].set_yticks([])
     # axs[1, 0].imshow(geo_map[::, ::, 0])
     # axs[1, 0].set_xticks([])
     # axs[1, 0].set_yticks([])
