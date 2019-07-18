@@ -268,7 +268,6 @@ def predict(model, epoch):
 
         start_time = time.time()
         im_resized, (ratio_h, ratio_w) = resize_image(im)
-        im_resized = im_resized.astype(np.float32)
         im_resized = transforms.ToPILImage()(im_resized)
         im_resized = transformer(im_resized)
         im_resized = im_resized.to(device)
