@@ -105,7 +105,7 @@ class EastDataset(Dataset):
         training_mask = training_mask[::4, ::4, np.newaxis].astype(np.float32)
         training_mask = np.transpose(training_mask, (2, 0, 1))
 
-        return im, score_map, geo_map, training_mask
+        return im, score_map, geo_map, training_mask, text_polys
 
     def __len__(self):
         return len(self.image_list)
@@ -124,6 +124,7 @@ if __name__ == "__main__":
     score_map = dataset[index][1]
     geo_map = dataset[index][2]
     training_mask = dataset[index][3]
+    text_polys = dataset[index][4]
     print(score_map.shape)
 
     fig, axs = plt.subplots(3, 2, figsize=(20, 30))
