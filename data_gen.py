@@ -93,6 +93,10 @@ class EastDataset(Dataset):
             new_h, new_w, _ = im.shape
             score_map, geo_map, training_mask = generate_rbox((new_h, new_w), text_polys, text_tags)
 
+        print(score_map.shape)
+        print(geo_map.shape)
+        print(training_mask.shape)
+
         return im, score_map, geo_map, training_mask
 
     def __len__(self):
