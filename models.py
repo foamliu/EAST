@@ -206,9 +206,9 @@ class EastModel(nn.Module):
 
         self.conv9 = nn.Conv2d(in_channels=32, out_channels=4, kernel_size=1)
         self.conv10 = nn.Conv2d(in_channels=32, out_channels=1, kernel_size=1)
-        self.unpool1 = nn.Upsample(scale_factor=2, mode='bilinear')
-        self.unpool2 = nn.Upsample(scale_factor=2, mode='bilinear')
-        self.unpool3 = nn.Upsample(scale_factor=2, mode='bilinear')
+        self.unpool1 = nn.Upsample(scale_factor=2, align_corners=False)
+        self.unpool2 = nn.Upsample(scale_factor=2, align_corners=False)
+        self.unpool3 = nn.Upsample(scale_factor=2, align_corners=False)
 
     def forward(self, images):
         _, f = self.resnet(images)
