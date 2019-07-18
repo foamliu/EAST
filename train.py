@@ -2,13 +2,13 @@ import numpy as np
 import torch
 from tensorboardX import SummaryWriter
 from torch import nn
-from torch.optim.lr_scheduler import StepLR
 
 from config import device, grad_clip, print_freq, num_workers
 from data_gen import EastDataset
 from loss import LossFunc
 from models import EastModel
-from utils import parse_args, save_checkpoint, AverageMeter, clip_gradient, get_logger, get_learning_rate
+from utils import parse_args, save_checkpoint, AverageMeter, clip_gradient, get_logger, get_learning_rate, \
+    adjust_learning_rate
 
 
 def train_net(args):
@@ -54,19 +54,26 @@ def train_net(args):
     test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=args.batch_size, shuffle=False,
                                               num_workers=num_workers)
 
-    # Decay learning rate
-    scheduler = StepLR(optimizer, step_size=10000, gamma=0.94)
-
     # Epochs
     for epoch in range(start_epoch, args.end_epoch):
+        # Decay learning rate if there is no improvement for 2 consecutive epochs, and terminate training after 10
+        if epochs_since_improvement == 10:
+            break
+        if epochs_since_improvement > 0 and epochs_since_improvement % 2 == 0:
+            checkpoint = 'BEST_checkpoint.tar'
+            checkpoint = torch.load(checkpoint)
+            model = checkpoint['model']
+            optimizer = checkpoint['optimizer']
+
+            adjust_learning_rate(optimizer, 0.8)
+
         # One epoch's training
         train_loss = train(train_loader=train_loader,
                            model=model,
                            criterion=criterion,
                            optimizer=optimizer,
                            epoch=epoch,
-                           logger=logger,
-                           scheduler=scheduler)
+                           logger=logger)
         effective_lr = get_learning_rate(optimizer)
         print('\nCurrent effective learning rate: {}\n'.format(effective_lr))
 
@@ -93,15 +100,13 @@ def train_net(args):
         save_checkpoint(epoch, epochs_since_improvement, model, optimizer, best_loss, is_best)
 
 
-def train(train_loader, model, criterion, optimizer, epoch, logger, scheduler):
+def train(train_loader, model, criterion, optimizer, epoch, logger):
     model.train()  # train mode (dropout and batchnorm is used)
 
     losses = AverageMeter()
 
     # Batches
     for i, (img, score_map, geo_map, training_mask) in enumerate(train_loader):
-        scheduler.step()
-
         # Move to GPU, if available
         img = img.to(device)
         score_map = score_map.to(device)
