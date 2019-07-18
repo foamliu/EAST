@@ -57,6 +57,7 @@ class EastDataset(Dataset):
         if np.random.rand() < background_ratio:
             # crop background
             im, text_polys, text_tags = crop_area(im, text_polys, text_tags, crop_background=True)
+            print(text_polys.shape)
             assert (text_polys.shape[0] > 0)
             # pad and resize image
             new_h, new_w, _ = im.shape
@@ -70,7 +71,7 @@ class EastDataset(Dataset):
             training_mask = np.ones((input_size, input_size), dtype=np.uint8)
         else:
             im, text_polys, text_tags = crop_area(im, text_polys, text_tags, crop_background=False)
-            assert (text_polys.shape[0] == 0)
+            assert (text_polys.shape[0] > 0)
 
             h, w, _ = im.shape
 
