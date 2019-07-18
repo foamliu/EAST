@@ -130,7 +130,7 @@ def train(train_loader, model, criterion, optimizer, epoch, logger):
         optimizer.step()
 
         # Keep track of metrics
-        losses.update(loss.item())
+        losses.update(loss.item(), img.size(0))
 
         # Print status
         if i % print_freq == 0:
@@ -160,7 +160,7 @@ def test(test_loader, model, criterion, logger):
         loss = criterion(score_map, f_score, geo_map, f_geometry, training_mask)
 
         # Keep track of metrics
-        losses.update(loss.item())
+        losses.update(loss.item(), img.size(0))
 
     # Print status
     logger.info('TEST Loss {loss.val:.4f} ({loss.avg:.4f})\n'.format(loss=losses))
