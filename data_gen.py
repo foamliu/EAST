@@ -57,7 +57,7 @@ class EastDataset(Dataset):
         if np.random.rand() < background_ratio:
             # crop background
             im, text_polys, text_tags = crop_area(im, text_polys, text_tags, crop_background=True)
-            assert (text_polys.shape[0] == 0)
+            assert (text_polys.shape[0] > 0)
             # pad and resize image
             new_h, new_w, _ = im.shape
             max_h_w_i = np.max([new_h, new_w, input_size])
