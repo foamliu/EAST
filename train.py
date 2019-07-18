@@ -2,9 +2,11 @@ import numpy as np
 import torch
 from tensorboardX import SummaryWriter
 from torch import nn
+from torch.optim.lr_scheduler import StepLR
 
 from config import device, grad_clip, print_freq, num_workers
 from data_gen import EastDataset
+from loss import LossFunc
 from models import EastModel
 from utils import parse_args, save_checkpoint, AverageMeter, clip_gradient, accuracy, get_logger, adjust_learning_rate, \
     get_learning_rate
@@ -43,7 +45,7 @@ def train_net(args):
     model = model.to(device)
 
     # Loss function
-    criterion = nn.CrossEntropyLoss().to(device)
+    criterion = LossFunc()
 
     # Custom dataloaders
     train_dataset = EastDataset('train')
@@ -52,6 +54,8 @@ def train_net(args):
     valid_dataset = EastDataset('valid')
     valid_loader = torch.utils.data.DataLoader(valid_dataset, batch_size=args.batch_size, shuffle=False,
                                                num_workers=num_workers)
+
+    scheduler = StepLR(optimizer, step_size=10000, gamma=0.94)
 
     # Epochs
     for epoch in range(start_epoch, args.end_epoch):
@@ -72,7 +76,8 @@ def train_net(args):
                                             criterion=criterion,
                                             optimizer=optimizer,
                                             epoch=epoch,
-                                            logger=logger)
+                                            logger=logger,
+                                            scheduler=scheduler)
         effective_lr = get_learning_rate(optimizer)
         print('\nCurrent effective learning rate: {}\n'.format(effective_lr))
 
@@ -102,23 +107,26 @@ def train_net(args):
         save_checkpoint(epoch, epochs_since_improvement, model, optimizer, best_loss, is_best)
 
 
-def train(train_loader, model, criterion, optimizer, epoch, logger):
+def train(train_loader, model, criterion, optimizer, epoch, logger, scheduler):
     model.train()  # train mode (dropout and batchnorm is used)
 
     losses = AverageMeter()
-    top1_accs = AverageMeter()
 
     # Batches
-    for i, (img, label) in enumerate(train_loader):
+    for i, (img, score_map, geo_map, training_mask) in enumerate(train_loader):
+        scheduler.step()
+
         # Move to GPU, if available
         img = img.to(device)
-        label = label.to(device)  # [N, 1]
+        score_map = score_map.to(device)
+        geo_map = geo_map.to(device)
+        training_mask = training_mask.to(device)
 
         # Forward prop.
-        output = model(img)  # embedding => [N, 512]
+        f_score, f_geometry = model(img)  # embedding => [N, 512]
 
         # Calculate loss
-        loss = criterion(output, label)
+        loss = criterion(score_map, f_score, geo_map, f_geometry, training_mask)
 
         # Back prop.
         optimizer.zero_grad()
@@ -132,18 +140,13 @@ def train(train_loader, model, criterion, optimizer, epoch, logger):
 
         # Keep track of metrics
         losses.update(loss.item())
-        top1_accuracy = accuracy(output, label, 15)
-        top1_accs.update(top1_accuracy)
 
         # Print status
         if i % print_freq == 0:
             logger.info('Epoch: [{0}][{1}/{2}]\t'
-                        'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
-                        'Top1 Accuracy {top1_accs.val:.3f} ({top1_accs.avg:.3f})'.format(epoch, i, len(train_loader),
-                                                                                         loss=losses,
-                                                                                         top1_accs=top1_accs))
+                        'Loss {loss.val:.4f} ({loss.avg:.4f})'.format(epoch, i, len(train_loader), loss=losses))
 
-    return losses.avg, top1_accs.avg
+    return losses.avg
 
 
 def valid(valid_loader, model, criterion, epoch, logger):
