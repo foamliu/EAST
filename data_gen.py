@@ -33,7 +33,7 @@ def collate_fn(batch):
     training_masks = []
     for i in range(bs):
         if img[i] is not None:
-            a = torch.from_numpy(img[i])
+            a = img[i]
             # a = img[i]
             images.append(a)
 
@@ -57,6 +57,7 @@ def collate_fn(batch):
     return images, score_maps, geo_maps, training_masks
 
 
+
 class EastDataset(Dataset):
     def __init__(self, split):
         if split == 'train':
@@ -69,6 +70,9 @@ class EastDataset(Dataset):
 
         print('{} {} images in {}'.format(
             self.image_list.shape[0], split, self.data_path))
+
+    def get_data_record(self, i):
+
 
     def __getitem__(self, i):
         im_fn = self.image_list[i]
