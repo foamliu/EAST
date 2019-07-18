@@ -5,7 +5,7 @@ from torch import nn
 
 from config import device, grad_clip, print_freq, num_workers
 from data_gen import EastDataset
-from models import resnet18, resnet34, resnet50, resnet101, resnet152, resnet_face18
+from models import resnet18, resnet34, resnet50, resnet101, resnet152
 from utils import parse_args, save_checkpoint, AverageMeter, clip_gradient, accuracy, get_logger, adjust_learning_rate, \
     get_learning_rate
 
@@ -32,7 +32,7 @@ def train_net(args):
         elif args.network == 'r152':
             model = resnet152(args)
         else:
-            model = resnet_face18(args.use_se)
+            model = resnet50(args)
         model = nn.DataParallel(model)
 
         if args.optimizer == 'sgd':
