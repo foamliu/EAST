@@ -139,7 +139,7 @@ class EastDataset(Dataset):
         training_mask = training_mask[::4, ::4, np.newaxis].astype(np.float32)
         # training_mask = np.transpose(training_mask, (2, 0, 1))
 
-        return im, score_map, geo_map, training_mask, text_polys
+        return im, score_map, geo_map, training_mask  # , text_polys
 
     def __len__(self):
         return len(self.image_list)
