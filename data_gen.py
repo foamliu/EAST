@@ -39,6 +39,7 @@ class EastDataset(Dataset):
         # print im_fn
         h, w, _ = im.shape
         txt_fn = im_fn.replace(os.path.basename(im_fn).split('.')[1], 'txt')
+        print(txt_fn)
         assert (os.path.exists(txt_fn))
 
         text_polys, text_tags = load_annoataion(txt_fn)
