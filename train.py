@@ -8,7 +8,7 @@ from config import device, grad_clip, print_freq, num_workers
 from data_gen import EastDataset
 from loss import LossFunc
 from models import EastModel
-from utils import parse_args, save_checkpoint, AverageMeter, clip_gradient, accuracy, get_logger, adjust_learning_rate, \
+from utils import parse_args, save_checkpoint, AverageMeter, clip_gradient, get_logger, adjust_learning_rate, \
     get_learning_rate
 
 
@@ -71,28 +71,26 @@ def train_net(args):
             adjust_learning_rate(optimizer, 0.5)
 
         # One epoch's training
-        train_loss, train_top1_accs = train(train_loader=train_loader,
-                                            model=model,
-                                            criterion=criterion,
-                                            optimizer=optimizer,
-                                            epoch=epoch,
-                                            logger=logger,
-                                            scheduler=scheduler)
+        train_loss = train(train_loader=train_loader,
+                           model=model,
+                           criterion=criterion,
+                           optimizer=optimizer,
+                           epoch=epoch,
+                           logger=logger,
+                           scheduler=scheduler)
         effective_lr = get_learning_rate(optimizer)
         print('\nCurrent effective learning rate: {}\n'.format(effective_lr))
 
         writer.add_scalar('Train_Loss', train_loss, epoch)
-        writer.add_scalar('Train_Top1_Accuracy', train_top1_accs, epoch)
         writer.add_scalar('Learning_Rate', effective_lr, epoch)
 
         # One epoch's validation
-        valid_loss, valid_top1_accs = valid(valid_loader=valid_loader,
-                                            model=model,
-                                            criterion=criterion,
-                                            epoch=epoch,
-                                            logger=logger)
+        valid_loss = valid(valid_loader=valid_loader,
+                           model=model,
+                           criterion=criterion,
+                           epoch=epoch,
+                           logger=logger)
         writer.add_scalar('Valid_Loss', valid_loss, epoch)
-        writer.add_scalar('Valid_Top1_Accuracy', valid_top1_accs, epoch)
 
         # Check if there was an improvement
         is_best = valid_loss < best_loss
@@ -153,7 +151,6 @@ def valid(valid_loader, model, criterion, epoch, logger):
     model.eval()  # train mode (dropout and batchnorm is used)
 
     losses = AverageMeter()
-    top1_accs = AverageMeter()
 
     # Batches
     for i, (img, label) in enumerate(valid_loader):
@@ -169,8 +166,6 @@ def valid(valid_loader, model, criterion, epoch, logger):
 
         # Keep track of metrics
         losses.update(loss.item())
-        top1_accuracy = accuracy(output, label, 1)
-        top1_accs.update(top1_accuracy)
 
         # Print status
         if i % print_freq == 0:
@@ -180,7 +175,7 @@ def valid(valid_loader, model, criterion, epoch, logger):
                                                                                          loss=losses,
                                                                                          top1_accs=top1_accs))
 
-    return losses.avg, top1_accs.avg
+    return losses.avg
 
 
 def main():
