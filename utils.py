@@ -81,16 +81,20 @@ def accuracy(scores, targets, k=1):
 def parse_args():
     parser = argparse.ArgumentParser(description='Train face network')
     # general
-    parser.add_argument('--end-epoch', type=int, default=1000, help='training epoch size.')
-    parser.add_argument('--lr', type=float, default=0.001, help='start learning rate')
+    parser.add_argument('--network', default='r50', help='specify network')
+    parser.add_argument('--pretrained', type=bool, default=True, help='pretrained model')
+    parser.add_argument('--input-size', type=int, default=1000, help='image input size.')
+    parser.add_argument('--batch-size', type=int, default=28, help='batch size in each context')
+    parser.add_argument('--lr', type=float, default=0.0001, help='start learning rate')
     parser.add_argument('--lr-step', type=int, default=10, help='period of learning rate decay')
     parser.add_argument('--optimizer', default='adam', help='optimizer')
     parser.add_argument('--weight-decay', type=float, default=0.0005, help='weight decay')
+    parser.add_argument('--moving-average-decay', type=float, default=0.997, help='moving average decay')
     parser.add_argument('--mom', type=float, default=0.9, help='momentum')
-    parser.add_argument('--batch-size', type=int, default=32, help='batch size in each context')
+    parser.add_argument('--end-epoch', type=int, default=1000, help='training epoch size.')
     parser.add_argument('--checkpoint', type=str, default=None, help='checkpoint')
-    parser.add_argument('--pretrained', type=bool, default=True, help='pretrained model')
-    parser.add_argument('--network', default='r50', help='specify network')
+
+
     args = parser.parse_args()
     return args
 

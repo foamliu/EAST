@@ -1,13 +1,12 @@
-import csv
 import json
 import os
 
 import cv2 as cv
-import numpy as np
 from torch.utils.data import Dataset
 from torchvision import transforms
 
 from config import im_size
+from icdar import load_annoataion
 
 # Data augmentation and normalization for training
 # Just normalization for validation
@@ -22,19 +21,6 @@ data_transforms = {
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ]),
 }
-
-
-def load_annoataion(p):
-    text_polys = []
-
-    with open(p, 'r', encoding='utf-8') as f:
-        reader = csv.reader(f)
-        for line in reader:
-            line = [i.strip('\ufeff') for i in line]
-            x1, y1, x2, y2, x3, y3, x4, y4 = list(line[:8])
-            text_polys.append([[x1, y1], [x2, y2], [x3, y3], [x4, y4]])
-
-    return np.array(text_polys, dtype=np.float32)
 
 
 class EastDataset(Dataset):
