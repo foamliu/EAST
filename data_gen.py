@@ -148,6 +148,7 @@ class EastDataset(Dataset):
             try:
                 return get_data_record(self.image_list, idx, self.data_path, self.transformer)
             except TypeError:
+                import random
                 idx = random.randint(0, len(self.image_list) - 1)
 
     def __len__(self):
