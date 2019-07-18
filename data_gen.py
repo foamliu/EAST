@@ -152,7 +152,7 @@ if __name__ == "__main__":
     axs[2, 0].imshow(geo_map[::, ::, 2])
     axs[2, 0].set_xticks([])
     axs[2, 0].set_yticks([])
-    axs[2, 1].imshow(training_mask[::, ::])
+    axs[2, 1].imshow(training_mask[::, ::, 0])
     axs[2, 1].set_xticks([])
     axs[2, 1].set_yticks([])
     plt.tight_layout()
