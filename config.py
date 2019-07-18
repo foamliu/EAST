@@ -13,6 +13,7 @@ min_crop_side_ratio = 0.1  # when doing random crop from input image, the min le
 geometry = 'RBOX'  # which geometry to generate, RBOX or QUAD
 background_ratio = 3. / 8
 random_scale = np.array([0.5, 1, 2.0, 3.0])
+epsilon = 1e-8
 
 train_ratio = 0.9
 num_samples = 1000

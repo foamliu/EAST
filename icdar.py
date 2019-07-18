@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from shapely.geometry import Polygon
 
-from config import training_data_path, min_text_size, geometry, min_crop_side_ratio
+from config import training_data_path, min_text_size, geometry, min_crop_side_ratio, epsilon
 
 
 def get_images(data_path):
@@ -225,7 +225,7 @@ def shrink_poly(poly, r):
 
 def point_dist_to_line(p1, p2, p3):
     # compute the distance from p3 to p1-p2
-    return np.linalg.norm(np.cross(p2 - p1, p1 - p3)) / np.linalg.norm(p2 - p1)
+    return np.linalg.norm(np.cross(p2 - p1, p1 - p3)) / (np.linalg.norm(p2 - p1) + epsilon)
 
 
 def fit_line(p1, p2):
