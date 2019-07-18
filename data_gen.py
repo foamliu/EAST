@@ -3,9 +3,24 @@ import os
 import cv2 as cv
 import numpy as np
 from torch.utils.data import Dataset
+from torchvision import transforms
 
 from config import input_size, training_data_path, test_data_path, background_ratio, random_scale, geometry
 from icdar import load_annoataion, get_images, check_and_validate_polys, crop_area, generate_rbox
+
+# Data augmentation and normalization for training
+# Just normalization for validation
+data_transforms = {
+    'train': transforms.Compose([
+        transforms.ColorJitter(0.5, 0.5, 0.5, 0.25),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+    ]),
+    'valid': transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ]),
+}
 
 
 class EastDataset(Dataset):
@@ -16,6 +31,7 @@ class EastDataset(Dataset):
             self.data_path = test_data_path
 
         self.image_list = np.array(get_images(self.data_path))
+        self.transformer = data_transforms[split]
 
         print('{} {} images in {}'.format(
             self.image_list.shape[0], split, self.data_path))
@@ -77,6 +93,10 @@ class EastDataset(Dataset):
             text_polys[:, :, 1] *= resize_ratio_3_y
             new_h, new_w, _ = im.shape
             score_map, geo_map, training_mask = generate_rbox((new_h, new_w), text_polys, text_tags)
+
+        im = im[..., ::-1]  # RGB
+        im = transforms.ToPILImage()(im)
+        im = self.transformer(im)
 
         return im, score_map, geo_map, training_mask
 
