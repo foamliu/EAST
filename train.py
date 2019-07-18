@@ -2,6 +2,7 @@ import numpy as np
 import torch
 from tensorboardX import SummaryWriter
 from torch import nn
+from tqdm import tqdm
 
 from config import device, grad_clip, print_freq, num_workers
 from data_gen import EastDataset, collate_fn
@@ -146,7 +147,7 @@ def test(test_loader, model, criterion, logger):
     losses = AverageMeter()
 
     # Batches
-    for i, (img, score_map, geo_map, training_mask) in enumerate(test_loader):
+    for img, score_map, geo_map, training_mask in tqdm(test_loader):
         # Move to GPU, if available
         img = img.to(device)
         score_map = score_map.to(device)
