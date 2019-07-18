@@ -5,17 +5,14 @@ import shutil
 import time
 
 import cv2
-import lanms
 import numpy as np
 import torch
 from torchvision import transforms
 
-import config as cfg
-from config import device
-from data_gen import data_transforms
+import lanms
+from config import device, result_root
+from data_gen import data_transforms, test_data_path
 from icdar import restore_rectangle, polygon_area
-
-test_data_path = cfg.test_img_path
 
 
 def rotate(box_List, image):
@@ -231,9 +228,8 @@ def save_box(box_List, image, img_path):
 
 
 def predict(model, epoch):
-    # prepare ooutput directory
+    # prepare output directory
     print('EAST <==> TEST <==> Create Res_file and Img_with_box <==> Begin')
-    result_root = os.path.abspath(cfg.result)
     if not os.path.exists(result_root):
         os.mkdir(result_root)
 
