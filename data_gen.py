@@ -2,6 +2,7 @@ import os
 
 import cv2 as cv
 import numpy as np
+import torch
 from torch.utils.data import Dataset
 from torchvision import transforms
 
@@ -21,6 +22,39 @@ data_transforms = {
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ]),
 }
+
+
+def collate_fn(batch):
+    img, score_map, geo_map, training_mask = zip(*batch)  # tuple
+    bs = len(score_map)
+    images = []
+    score_maps = []
+    geo_maps = []
+    training_masks = []
+    for i in range(bs):
+        if img[i] is not None:
+            a = torch.from_numpy(img[i])
+            # a = img[i]
+            images.append(a)
+
+            b = torch.from_numpy(score_map[i])
+            b = b.permute(2, 0, 1)
+            score_maps.append(b)
+
+            c = torch.from_numpy(geo_map[i])
+            c = c.permute(2, 0, 1)
+            geo_maps.append(c)
+
+            d = torch.from_numpy(training_mask[i])
+            d = d.permute(2, 0, 1)
+            training_masks.append(d)
+
+    images = torch.stack(images, 0)
+    score_maps = torch.stack(score_maps, 0)
+    geo_maps = torch.stack(geo_maps, 0)
+    training_masks = torch.stack(training_masks, 0)
+
+    return images, score_maps, geo_maps, training_masks
 
 
 class EastDataset(Dataset):
