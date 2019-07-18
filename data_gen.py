@@ -129,8 +129,8 @@ class EastDataset(Dataset):
             score_map, geo_map, training_mask = generate_rbox((new_h, new_w), text_polys, text_tags)
 
         im = im[..., ::-1]  # RGB
-        # im = transforms.ToPILImage()(im)
-        # im = self.transformer(im)
+        im = transforms.ToPILImage()(im)
+        im = self.transformer(im)
 
         score_map = score_map[::4, ::4, np.newaxis].astype(np.float32)
         # score_map = np.transpose(score_map, (2, 0, 1))
