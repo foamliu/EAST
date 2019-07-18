@@ -257,5 +257,4 @@ class EastModel(nn.Module):
 if __name__ == "__main__":
     args = parse_args()
     model = EastModel(args).to(device)
-    # model = torchvision.models.resnet50().to(device)
-    summary(model, (3, 1280, 720))
+    summary(model, (3, 512, 512))
