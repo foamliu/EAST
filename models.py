@@ -212,7 +212,7 @@ class EastModel(nn.Module):
 
     def forward(self, images):
         _, f = self.resnet(images)
-        print(images.size())
+
         h = f[3]  # bs 2048 w/32 h/32
         g = (self.unpool1(h))  # bs 2048 w/16 h/16
         c = self.conv1(torch.cat((g, f[2]), 1))
