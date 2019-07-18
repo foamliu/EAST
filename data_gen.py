@@ -57,6 +57,78 @@ def collate_fn(batch):
     return images, score_maps, geo_maps, training_masks
 
 
+def get_data_record(image_list, i, data_path, transformer):
+    im_fn = image_list[i]
+    im = cv.imread(im_fn)
+    # print im_fn
+    h, w, _ = im.shape
+    txt_fn = im_fn.replace(data_path, '')
+    txt_fn = os.path.join(data_path, 'gt_' + txt_fn.split('.')[0] + '.txt')
+    assert (os.path.exists(txt_fn))
+
+    text_polys, text_tags = load_annoataion(txt_fn)
+
+    text_polys, text_tags = check_and_validate_polys(text_polys, text_tags, (h, w))
+    # if text_polys.shape[0] == 0:
+    #     continue
+    # random scale this image
+    rd_scale = np.random.choice(random_scale)
+    im = cv.resize(im, dsize=None, fx=rd_scale, fy=rd_scale)
+    text_polys *= rd_scale
+    # print rd_scale
+    # random crop a area from image
+    if np.random.rand() < background_ratio:
+        # crop background
+        im, text_polys, text_tags = crop_area(im, text_polys, text_tags, crop_background=True)
+        # assert (text_polys.shape[0] > 0)
+        # pad and resize image
+        new_h, new_w, _ = im.shape
+        max_h_w_i = np.max([new_h, new_w, input_size])
+        im_padded = np.zeros((max_h_w_i, max_h_w_i, 3), dtype=np.uint8)
+        im_padded[:new_h, :new_w, :] = im.copy()
+        im = cv.resize(im_padded, dsize=(input_size, input_size))
+        score_map = np.zeros((input_size, input_size), dtype=np.uint8)
+        geo_map_channels = 5 if geometry == 'RBOX' else 8
+        geo_map = np.zeros((input_size, input_size, geo_map_channels), dtype=np.float32)
+        training_mask = np.ones((input_size, input_size), dtype=np.uint8)
+    else:
+        im, text_polys, text_tags = crop_area(im, text_polys, text_tags, crop_background=False)
+        assert (text_polys.shape[0] > 0)
+
+        h, w, _ = im.shape
+
+        # pad the image to the training input size or the longer side of image
+        new_h, new_w, _ = im.shape
+        max_h_w_i = np.max([new_h, new_w, input_size])
+        im_padded = np.zeros((max_h_w_i, max_h_w_i, 3), dtype=np.uint8)
+        im_padded[:new_h, :new_w, :] = im.copy()
+        im = im_padded
+        # resize the image to input size
+        new_h, new_w, _ = im.shape
+        resize_h = input_size
+        resize_w = input_size
+        im = cv.resize(im, dsize=(resize_w, resize_h))
+        resize_ratio_3_x = resize_w / float(new_w)
+        resize_ratio_3_y = resize_h / float(new_h)
+        text_polys[:, :, 0] *= resize_ratio_3_x
+        text_polys[:, :, 1] *= resize_ratio_3_y
+        new_h, new_w, _ = im.shape
+        score_map, geo_map, training_mask = generate_rbox((new_h, new_w), text_polys, text_tags)
+
+    im = im[..., ::-1]  # RGB
+    im = transforms.ToPILImage()(im)
+    im = transformer(im)
+
+    score_map = score_map[::4, ::4, np.newaxis].astype(np.float32)
+    # score_map = np.transpose(score_map, (2, 0, 1))
+    geo_map = geo_map[::4, ::4, :].astype(np.float32)
+    # geo_map = np.transpose(geo_map, (2, 0, 1))
+    training_mask = training_mask[::4, ::4, np.newaxis].astype(np.float32)
+    # training_mask = np.transpose(training_mask, (2, 0, 1))
+
+    return im, score_map, geo_map, training_mask  # , text_polys
+
+
 class EastDataset(Dataset):
     def __init__(self, split):
         if split == 'train':
@@ -71,75 +143,12 @@ class EastDataset(Dataset):
             self.image_list.shape[0], split, self.data_path))
 
     def __getitem__(self, i):
-        im_fn = self.image_list[i]
-        im = cv.imread(im_fn)
-        # print im_fn
-        h, w, _ = im.shape
-        txt_fn = im_fn.replace(self.data_path, '')
-        txt_fn = os.path.join(self.data_path, 'gt_' + txt_fn.split('.')[0] + '.txt')
-        assert (os.path.exists(txt_fn))
-
-        text_polys, text_tags = load_annoataion(txt_fn)
-
-        text_polys, text_tags = check_and_validate_polys(text_polys, text_tags, (h, w))
-        # if text_polys.shape[0] == 0:
-        #     continue
-        # random scale this image
-        rd_scale = np.random.choice(random_scale)
-        im = cv.resize(im, dsize=None, fx=rd_scale, fy=rd_scale)
-        text_polys *= rd_scale
-        # print rd_scale
-        # random crop a area from image
-        if np.random.rand() < background_ratio:
-            # crop background
-            im, text_polys, text_tags = crop_area(im, text_polys, text_tags, crop_background=True)
-            # assert (text_polys.shape[0] > 0)
-            # pad and resize image
-            new_h, new_w, _ = im.shape
-            max_h_w_i = np.max([new_h, new_w, input_size])
-            im_padded = np.zeros((max_h_w_i, max_h_w_i, 3), dtype=np.uint8)
-            im_padded[:new_h, :new_w, :] = im.copy()
-            im = cv.resize(im_padded, dsize=(input_size, input_size))
-            score_map = np.zeros((input_size, input_size), dtype=np.uint8)
-            geo_map_channels = 5 if geometry == 'RBOX' else 8
-            geo_map = np.zeros((input_size, input_size, geo_map_channels), dtype=np.float32)
-            training_mask = np.ones((input_size, input_size), dtype=np.uint8)
-        else:
-            im, text_polys, text_tags = crop_area(im, text_polys, text_tags, crop_background=False)
-            assert (text_polys.shape[0] > 0)
-
-            h, w, _ = im.shape
-
-            # pad the image to the training input size or the longer side of image
-            new_h, new_w, _ = im.shape
-            max_h_w_i = np.max([new_h, new_w, input_size])
-            im_padded = np.zeros((max_h_w_i, max_h_w_i, 3), dtype=np.uint8)
-            im_padded[:new_h, :new_w, :] = im.copy()
-            im = im_padded
-            # resize the image to input size
-            new_h, new_w, _ = im.shape
-            resize_h = input_size
-            resize_w = input_size
-            im = cv.resize(im, dsize=(resize_w, resize_h))
-            resize_ratio_3_x = resize_w / float(new_w)
-            resize_ratio_3_y = resize_h / float(new_h)
-            text_polys[:, :, 0] *= resize_ratio_3_x
-            text_polys[:, :, 1] *= resize_ratio_3_y
-            new_h, new_w, _ = im.shape
-            score_map, geo_map, training_mask = generate_rbox((new_h, new_w), text_polys, text_tags)
-
-        im = im[..., ::-1]  # RGB
-        im = transforms.ToPILImage()(im)
-        im = self.transformer(im)
-
-        score_map = score_map[::4, ::4, np.newaxis].astype(np.float32)
-        # score_map = np.transpose(score_map, (2, 0, 1))
-        geo_map = geo_map[::4, ::4, :].astype(np.float32)
-        # geo_map = np.transpose(geo_map, (2, 0, 1))
-        training_mask = training_mask[::4, ::4, np.newaxis].astype(np.float32)
-        # training_mask = np.transpose(training_mask, (2, 0, 1))
-
-        return im, score_map, geo_map, training_mask  # , text_polys
+        idx = i
+        while True:
+            try:
+                return get_data_record(self.image_list, idx, self.data_path, self.transformer)
+            except TypeError:
+                idx = random.randint(0, len(self.image_list) - 1)
 
     def __len__(self):
         return len(self.image_list)
