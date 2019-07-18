@@ -17,5 +17,5 @@ if __name__ == "__main__":
     extract('data/ch4_training_localization_transcription_gt.zip', training_data_path)
 
     ensure_folder(test_data_path)
-    extract('data/ch4_training_images.zip', test_data_path)
-    extract('data/ch4_training_localization_transcription_gt.zip', test_data_path)
+    extract('data/ch4_test_images.zip', test_data_path)
+    extract('data/Challenge4_Test_Task1_GT.zip', test_data_path)
