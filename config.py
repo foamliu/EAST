@@ -4,7 +4,8 @@ import torch
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')  # sets device for model and PyTorch tensors
 
 input_size = 512
-training_data_path = 'data/'  # training dataset to use
+training_data_path = 'data/train/'  # training dataset to use
+test_data_path = 'data/train/'
 max_image_large_side = 1280  # max image size of training
 max_text_size = 800  # if the text in the input image is bigger than this, then we resize the image according to this
 min_text_size = 10  # if the text size is smaller than this, we ignore it during training

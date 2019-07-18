@@ -5,7 +5,7 @@ import numpy as np
 from torch.utils.data import Dataset
 from torchvision import transforms
 
-from config import input_size, training_data_path, background_ratio, random_scale, geometry
+from config import input_size, training_data_path, test_data_path, background_ratio, random_scale, geometry
 from icdar import load_annoataion, get_images, check_and_validate_polys, crop_area, generate_rbox
 
 # Data augmentation and normalization for training
@@ -27,7 +27,11 @@ class EastDataset(Dataset):
     def __init__(self, split):
         self.split = split
 
-        self.image_list = np.array(get_images())
+        if split == 'train':
+            self.image_list = np.array(get_images(training_data_path))
+        else:
+            self.image_list = np.array(get_images(test_data_path))
+
         print('{} training images in {}'.format(
             self.image_list.shape[0], training_data_path))
 

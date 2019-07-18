@@ -13,11 +13,11 @@ from shapely.geometry import Polygon
 from config import training_data_path, min_text_size, geometry, min_crop_side_ratio
 
 
-def get_images():
+def get_images(data_path):
     files = []
     for ext in ['jpg', 'png', 'jpeg', 'JPG']:
         files.extend(glob.glob(
-            os.path.join(training_data_path, '*.{}'.format(ext))))
+            os.path.join(data_path, '*.{}'.format(ext))))
     return files
 
 

@@ -8,8 +8,7 @@ from config import device, grad_clip, print_freq, num_workers
 from data_gen import EastDataset
 from loss import LossFunc
 from models import EastModel
-from utils import parse_args, save_checkpoint, AverageMeter, clip_gradient, get_logger, adjust_learning_rate, \
-    get_learning_rate
+from utils import parse_args, save_checkpoint, AverageMeter, clip_gradient, get_logger, get_learning_rate
 
 
 def train_net(args):
@@ -51,25 +50,15 @@ def train_net(args):
     train_dataset = EastDataset('train')
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True,
                                                num_workers=num_workers)
-    valid_dataset = EastDataset('valid')
-    valid_loader = torch.utils.data.DataLoader(valid_dataset, batch_size=args.batch_size, shuffle=False,
-                                               num_workers=num_workers)
+    test_dataset = EastDataset('test')
+    test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=args.batch_size, shuffle=False,
+                                              num_workers=num_workers)
 
+    # Decay learning rate
     scheduler = StepLR(optimizer, step_size=10000, gamma=0.94)
 
     # Epochs
     for epoch in range(start_epoch, args.end_epoch):
-        # Decay learning rate if there is no improvement for 2 consecutive epochs, and terminate training after 10
-        if epochs_since_improvement == 10:
-            break
-        if epochs_since_improvement > 0 and epochs_since_improvement % 2 == 0:
-            checkpoint = 'BEST_checkpoint.tar'
-            checkpoint = torch.load(checkpoint)
-            model = checkpoint['model']
-            optimizer = checkpoint['optimizer']
-
-            adjust_learning_rate(optimizer, 0.5)
-
         # One epoch's training
         train_loss = train(train_loader=train_loader,
                            model=model,
@@ -85,16 +74,15 @@ def train_net(args):
         writer.add_scalar('Learning_Rate', effective_lr, epoch)
 
         # One epoch's validation
-        valid_loss = valid(valid_loader=valid_loader,
-                           model=model,
-                           criterion=criterion,
-                           epoch=epoch,
-                           logger=logger)
-        writer.add_scalar('Valid_Loss', valid_loss, epoch)
+        test_loss = test(test_loader=test_loader,
+                         model=model,
+                         criterion=criterion,
+                         logger=logger)
+        writer.add_scalar('Valid_Loss', test_loss, epoch)
 
         # Check if there was an improvement
-        is_best = valid_loss < best_loss
-        best_loss = min(valid_loss, best_loss)
+        is_best = test_loss < best_loss
+        best_loss = min(test_loss, best_loss)
         if not is_best:
             epochs_since_improvement += 1
             print("\nEpochs since last improvement: %d\n" % (epochs_since_improvement,))
@@ -147,13 +135,13 @@ def train(train_loader, model, criterion, optimizer, epoch, logger, scheduler):
     return losses.avg
 
 
-def valid(valid_loader, model, criterion, epoch, logger):
+def test(test_loader, model, criterion, logger):
     model.eval()  # train mode (dropout and batchnorm is used)
 
     losses = AverageMeter()
 
     # Batches
-    for i, (img, score_map, geo_map, training_mask) in enumerate(valid_loader):
+    for i, (img, score_map, geo_map, training_mask) in enumerate(test_loader):
         # Move to GPU, if available
         img = img.to(device)
         score_map = score_map.to(device)
@@ -169,10 +157,8 @@ def valid(valid_loader, model, criterion, epoch, logger):
         # Keep track of metrics
         losses.update(loss.item())
 
-        # Print status
-        if i % print_freq == 0:
-            logger.info('Epoch: [{0}][{1}/{2}]\t'
-                        'Loss {loss.val:.4f} ({loss.avg:.4f})\t'.format(epoch, i, len(valid_loader), loss=losses))
+    # Print status
+    logger.info('TEST Loss {loss.val:.4f} ({loss.avg:.4f})\n'.format(loss=losses))
 
     return losses.avg
 
