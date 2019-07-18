@@ -108,14 +108,8 @@ def train(train_loader, model, criterion, optimizer, epoch, logger, scheduler):
         geo_map = geo_map.to(device)
         training_mask = training_mask.to(device)
 
-        print(score_map.size())
-        print(geo_map.size())
-
         # Forward prop.
         f_score, f_geometry = model(img)
-
-        print(f_score.size())
-        print(f_geometry.size())
 
         # Calculate loss
         loss = criterion(score_map, f_score, geo_map, f_geometry, training_mask)
