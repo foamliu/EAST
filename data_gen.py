@@ -63,6 +63,9 @@ class EastDataset(Dataset):
         text_polys[:, :, 0] *= ratio_x
         text_polys[:, :, 1] *= ratio_y
 
+        print(img.size())
+        print(text_polys.shape)
+
         return img, text_polys
 
     def __len__(self):
