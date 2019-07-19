@@ -262,7 +262,8 @@ def predict(model, epoch):
     im_fn_list = get_images_for_test()
     start = time.time()
 
-    for idx, im_fn in tqdm(enumerate(im_fn_list)):
+    for idx in tqdm(range(len(im_fn_list))):
+        im_fn = im_fn_list[idx]
         # print('EAST <==> TEST <==> idx:{} <==> Begin'.format(idx))
         im = cv2.imread(im_fn)
         im = im[..., ::-1]  # RGB
