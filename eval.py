@@ -8,6 +8,7 @@ import cv2
 import numpy as np
 import torch
 from torchvision import transforms
+from tqdm import tqdm
 
 import lanms
 from config import device, result_root
@@ -254,15 +255,15 @@ def predict(model, epoch):
         if e.errno != 17:
             raise
 
-    print('EAST <==> TEST <==> Create Res_file and Img_with_box Directory ')
+    # print('EAST <==> TEST <==> Create Res_file and Img_with_box Directory ')
 
     transformer = data_transforms['test']
 
     im_fn_list = get_images_for_test()
     start = time.time()
 
-    for idx, im_fn in enumerate(im_fn_list):
-        print('EAST <==> TEST <==> idx:{} <==> Begin'.format(idx))
+    for idx, im_fn in tqdm(enumerate(im_fn_list)):
+        # print('EAST <==> TEST <==> idx:{} <==> Begin'.format(idx))
         im = cv2.imread(im_fn)
         im = im[..., ::-1]  # RGB
 
@@ -279,7 +280,7 @@ def predict(model, epoch):
         score, geometry = model(im_resized)
 
         timer['net'] = time.time() - start
-        print('EAST <==> TEST <==> idx:{} <==> model  :{:.2f}ms'.format(idx, timer['net'] * 1000))
+        # print('EAST <==> TEST <==> idx:{} <==> model  :{:.2f}ms'.format(idx, timer['net'] * 1000))
 
         score = score.permute(0, 2, 3, 1)
         geometry = geometry.permute(0, 2, 3, 1)
@@ -287,10 +288,10 @@ def predict(model, epoch):
         geometry = geometry.data.cpu().numpy()
 
         boxes, timer = detect(score_map=score, geo_map=geometry, timer=timer)
-        print('EAST <==> TEST <==> idx:{} <==> restore:{:.2f}ms'.format(idx, timer['restore'] * 1000))
-        print('EAST <==> TEST <==> idx:{} <==> nms    :{:.2f}ms'.format(idx, timer['nms'] * 1000))
+        # print('EAST <==> TEST <==> idx:{} <==> restore:{:.2f}ms'.format(idx, timer['restore'] * 1000))
+        # print('EAST <==> TEST <==> idx:{} <==> nms    :{:.2f}ms'.format(idx, timer['nms'] * 1000))
 
-        print('EAST <==> TEST <==> Record and Save <==> id:{} <==> Begin'.format(idx))
+        # print('EAST <==> TEST <==> Record and Save <==> id:{} <==> Begin'.format(idx))
         if boxes is not None:
             boxes = boxes[:, :8].reshape((-1, 4, 2))
             boxes[:, :, 0] /= ratio_w
@@ -326,10 +327,10 @@ def predict(model, epoch):
 
         save_img_path = os.path.join(output_dir_pic, os.path.basename(im_fn))
         cv2.imwrite(save_img_path, im[:, :, ::-1])
-        print('EAST <==> TEST <==> Save txt   at:{} <==> Done'.format(res_file))
-        print('EAST <==> TEST <==> Save image at:{} <==> Done'.format(save_img_path))
+        # print('EAST <==> TEST <==> Save txt   at:{} <==> Done'.format(res_file))
+        # print('EAST <==> TEST <==> Save image at:{} <==> Done'.format(save_img_path))
 
-        print('EAST <==> TEST <==> Record and Save <==> ids:{} <==> Done'.format(idx))
+        # print('EAST <==> TEST <==> Record and Save <==> ids:{} <==> Done'.format(idx))
     return output_dir_txt
 
 
