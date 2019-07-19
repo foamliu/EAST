@@ -53,7 +53,7 @@ def train_net(args):
                                                shuffle=True, num_workers=num_workers, collate_fn=collate_fn)
     test_dataset = EastDataset('test')
     test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=args.batch_size_per_gpu * args.num_gpus,
-                                              shuffle=False, num_workers=num_workers, collate_fn=collate_fn)
+                                              shuffle=True, num_workers=num_workers, collate_fn=collate_fn)
 
     # Epochs
     for epoch in range(start_epoch, args.end_epoch):
