@@ -23,6 +23,15 @@ Model is trained & tested on [ICDAR 2015](http://rrc.cvc.uab.es/?ch=4&com=downlo
 - ch4_test_images.zip
 - Challenge4_Test_Task1_GT.zip
 
+<pre>
+cd data/result/epoch_0_gt/
+zip -r submit.zip *
+cd ../../..
+mv data/result/epoch_0_gt/submit.zip ./script_test_ch4
+cd script_test_ch4
+python3 script.py –g=gt.zip –s=submit.zip
+</pre>
+
 ## Dependency
 
 - PyTorch 1.1.0
