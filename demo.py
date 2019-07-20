@@ -28,7 +28,8 @@ if __name__ == "__main__":
     im_fn_list = get_images_for_test()
     im_fn_list = random.sample(im_fn_list, 10)
 
-    for im_fn in tqdm(im_fn_list):
+    for idx in tqdm(range(len(im_fn_list))):
+        im_fn = im_fn_list[idx]
         im = cv.imread(im_fn)
         im = im[..., ::-1]  # RGB
 
@@ -85,5 +86,5 @@ if __name__ == "__main__":
                     cv.polylines(im[:, :, ::-1], [box.astype(np.int32).reshape((-1, 1, 2))], True, color=(255, 255, 0),
                                  thickness=1)
 
-        save_img_path = os.path.join(output_dir, os.path.basename(im_fn))
+        save_img_path = os.path.join(output_dir, 'out_{}.jpg'.format(idx))
         cv.imwrite(save_img_path, im[:, :, ::-1])
