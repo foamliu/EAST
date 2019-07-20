@@ -15,6 +15,13 @@ This is a PyTorch re-implementation of EAST: An Efficient and Accurate Scene Tex
 ## Credit
 The is ported from [argman/EAST](https://github.com/argman/EAST), the Tensorflow re-implementation.
 
+## DataSet
+
+Model is trained & tested on [ICDAR 2015](http://rrc.cvc.uab.es/?ch=4&com=downloads). Please download following 4 files then put them under "data" folder:
+- ch4_training_images.zip
+- ch4_training_localization_transcription_gt.zip
+- ch4_test_images.zip
+- Challenge4_Test_Task1_GT.zip
 
 ## Dependency
 
@@ -22,10 +29,9 @@ The is ported from [argman/EAST](https://github.com/argman/EAST), the Tensorflow
 
 ## Usage
 ### Data Pre-processing
-Extract training images:
+Extract training & test images:
 ```bash
 $ python extract.py
-$ python pre_process.py
 ```
 
 ### Train
@@ -39,7 +45,7 @@ $ tensorboard --logdir runs
 ```
 
 ### Demo
-10 random test examples from ICDAR-2015:
+Pick 10 random test examples from ICDAR-2015:
 ```bash
 $ python demo.py
 ```
