@@ -12,17 +12,6 @@ This is a PyTorch re-implementation of EAST: An Efficient and Accurate Scene Tex
     - Use dice loss (optimize IoU of segmentation) rather than balanced cross entropy
     - Use linear learning rate decay rather than staged learning rate decay
 
-## Credit
-Most codes are ported from [argman/EAST](https://github.com/argman/EAST) (the Tensorflow re-implementation).
-
-## DataSet
-
-Model is trained & tested on [ICDAR 2015](http://rrc.cvc.uab.es/?ch=4&com=downloads). Please download following 4 files then put them under "data" folder:
-- ch4_training_images.zip
-- ch4_training_localization_transcription_gt.zip
-- ch4_test_images.zip
-- Challenge4_Test_Task1_GT.zip
-
 ## Performance
 
 ### ICDAR 2015 
@@ -37,16 +26,23 @@ Model is trained & tested on [ICDAR 2015](http://rrc.cvc.uab.es/?ch=4&com=downlo
 
 ### Offline evaluation
 
-<pre>
-cd data/result/epoch_0_gt/
-zip -r submit.zip *
-cd ../../..
-mv data/result/epoch_0_gt/submit.zip ./script_test_ch4
-cd script_test_ch4
-python3 script.py -g=gt.zip -s=submit.zip
-cd ..
+```bash
+$ python eval.py
+$ ./eval.sh
 
-</pre>
+```
+
+## Credit
+Most codes are ported from [argman/EAST](https://github.com/argman/EAST) (the Tensorflow re-implementation).
+
+## DataSet
+
+Model is trained & tested on [ICDAR 2015](http://rrc.cvc.uab.es/?ch=4&com=downloads). Please download following 4 files then put them under "data" folder:
+- ch4_training_images.zip
+- ch4_training_localization_transcription_gt.zip
+- ch4_test_images.zip
+- Challenge4_Test_Task1_GT.zip
+
 
 ## Dependency
 
