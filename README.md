@@ -23,6 +23,10 @@ Model is trained & tested on [ICDAR 2015](http://rrc.cvc.uab.es/?ch=4&com=downlo
 - ch4_test_images.zip
 - Challenge4_Test_Task1_GT.zip
 
+## Performance
+
+### ICDAR 2015 Offline evaluation
+
 <pre>
 cd data/result/epoch_0_gt/
 zip -r submit.zip *
