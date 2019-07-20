@@ -25,7 +25,17 @@ Model is trained & tested on [ICDAR 2015](http://rrc.cvc.uab.es/?ch=4&com=downlo
 
 ## Performance
 
-### ICDAR 2015 Offline evaluation
+### ICDAR 2015 
+
+|Model|Recall|Precision|Hmean|
+|---|---|---|---|
+|EAST in PyTorch|65.86%|81.72%|72.94%|
+
+![image](https://github.com/foamliu/EAST/raw/master/images/Results_IoU.png)
+
+[Link](https://rrc.cvc.uab.es/?ch=4&com=evaluation&view=method_info&task=1&m=60628)
+
+### Offline evaluation
 
 <pre>
 cd data/result/epoch_0_gt/
@@ -33,7 +43,7 @@ zip -r submit.zip *
 cd ../../..
 mv data/result/epoch_0_gt/submit.zip ./script_test_ch4
 cd script_test_ch4
-python3 script.py –g=gt.zip –s=submit.zip
+python3 script.py -g=gt.zip -s=submit.zip
 cd ..
 
 </pre>
