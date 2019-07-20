@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is a PyTorch re-implementation of EAST: An Efficient and Accurate Scene Text Detector. The features are summarized blow:
+This is a PyTorch re-implementation of EAST: An Efficient and Accurate Scene Text Detector ([paper](https://arxiv.org/abs/1704.03155)). The features are summarized blow:
 
 - Only RBOX part is implemented.
 - A fast Locality-Aware NMS in C++ provided by the paper's author.
