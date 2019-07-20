@@ -59,8 +59,7 @@ if __name__ == "__main__":
             boxes[:, :, 1] /= ratio_h
 
         if boxes is not None:
-            res_file = os.path.join(output_dir,
-                                    'res_img_{}.txt'.format(os.path.basename(im_fn).split('_')[-1].strip('.jpg')))
+            res_file = os.path.join(output_dir, 'res_{}.txt'.format(idx))
             with open(res_file, 'w') as f:
                 for box in boxes:
                     box = sort_poly(box.astype(np.int32))
