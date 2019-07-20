@@ -13,7 +13,7 @@ This is a PyTorch re-implementation of EAST: An Efficient and Accurate Scene Tex
     - Use linear learning rate decay rather than staged learning rate decay
 
 ## Credit
-The is ported from [argman/EAST](https://github.com/argman/EAST), the Tensorflow re-implementation.
+Most codes are ported from [argman/EAST](https://github.com/argman/EAST) (the Tensorflow re-implementation).
 
 ## DataSet
 
