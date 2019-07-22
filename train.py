@@ -60,7 +60,7 @@ def train_net(args):
         # Decay learning rate if there is no improvement for 2 consecutive epochs, and terminate training after 10
         if epochs_since_improvement == 20:
             break
-        if epochs_since_improvement > 4:
+        if epochs_since_improvement >= 4:
             checkpoint = 'BEST_checkpoint.tar'
             checkpoint = torch.load(checkpoint)
             model = checkpoint['model']
