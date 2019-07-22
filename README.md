@@ -16,9 +16,9 @@ This is a PyTorch re-implementation of EAST: An Efficient and Accurate Scene Tex
 
 ### ICDAR 2015 
 
-|Model|Recall|Precision|Hmean|
-|---|---|---|---|
-|EAST in PyTorch|65.86%|81.72%|72.94%|
+|Model|Recall|Precision|Hmean|Download|
+|---|---|---|---|---|
+|EAST in PyTorch|65.86%|81.72%|72.94%|[Link](https://github.com/foamliu/EAST/releases/download/v1.0/BEST_checkpoint.tar)
 
 ![image](https://github.com/foamliu/EAST/raw/master/images/Results_IoU.png)
 
