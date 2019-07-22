@@ -1,5 +1,5 @@
 cd data/result/epoch_0_gt/
-zip -r submit.zip *
+zip -r submit.zip *.txt
 cd ../../..
 mv data/result/epoch_0_gt/submit.zip ./script_test_ch4
 cd script_test_ch4

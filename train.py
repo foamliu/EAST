@@ -6,7 +6,7 @@ from tqdm import tqdm
 
 from config import device, grad_clip, print_freq, num_workers
 from data_gen import EastDataset, collate_fn
-from loss import Loss
+from loss import LossFunc
 from models import EastModel
 from utils import parse_args, save_checkpoint, AverageMeter, clip_gradient, get_logger, get_learning_rate, \
     adjust_learning_rate
@@ -45,7 +45,7 @@ def train_net(args):
     model = model.to(device)
 
     # Loss function
-    criterion = Loss()
+    criterion = LossFunc()
 
     # Custom dataloaders
     train_dataset = EastDataset('train')
