@@ -54,7 +54,7 @@ def train_net(args):
                                                shuffle=True, num_workers=num_workers, collate_fn=collate_fn)
     test_dataset = EastDataset('test')
     test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=args.batch_size_per_gpu * args.num_gpus,
-                                              shuffle=True, num_workers=num_workers, collate_fn=collate_fn)
+                                              shuffle=False, num_workers=num_workers, collate_fn=collate_fn)
 
     # Epochs
     for epoch in range(start_epoch, args.end_epoch):
@@ -68,7 +68,7 @@ def train_net(args):
             optimizer = checkpoint['optimizer']
             decays_since_improvement += 1
             print("\nDecays since last improvement: %d\n" % (decays_since_improvement,))
-            adjust_learning_rate(optimizer, 0.8 ** decays_since_improvement)
+            adjust_learning_rate(optimizer, 0.6 ** decays_since_improvement)
 
         # One epoch's training
         train_loss = train(train_loader=train_loader,
