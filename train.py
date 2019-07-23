@@ -66,8 +66,8 @@ def train_net(args):
             checkpoint = torch.load(checkpoint)
             model = checkpoint['model']
             optimizer = checkpoint['optimizer']
-
             decays_since_improvement += 1
+            print("\nDecays since last improvement: %d\n" % (decays_since_improvement,))
             adjust_learning_rate(optimizer, 0.8 ** decays_since_improvement)
 
         # One epoch's training
