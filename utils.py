@@ -79,7 +79,7 @@ def accuracy(scores, targets, k=1):
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Train face network')
+    parser = argparse.ArgumentParser(description='Train EAST network')
     # general
     parser.add_argument('--network', default='r50', help='specify network')
     parser.add_argument('--pretrained', type=bool, default=True, help='pretrained model')
