@@ -20,6 +20,7 @@ def train_net(args):
     best_loss = float("inf")
     writer = SummaryWriter()
     epochs_since_improvement = 0
+    decays_since_improvement = 0
 
     # Initialize / load checkpoint
     if checkpoint is None:
@@ -66,7 +67,8 @@ def train_net(args):
             model = checkpoint['model']
             optimizer = checkpoint['optimizer']
 
-            adjust_learning_rate(optimizer, 0.8)
+            decays_since_improvement += 1
+            adjust_learning_rate(optimizer, 0.8 ** decays_since_improvement)
 
         # One epoch's training
         train_loss = train(train_loader=train_loader,
@@ -96,6 +98,7 @@ def train_net(args):
             print("\nEpochs since last improvement: %d\n" % (epochs_since_improvement,))
         else:
             epochs_since_improvement = 0
+            decays_since_improvement = 0
 
         # Save checkpoint
         save_checkpoint(epoch, epochs_since_improvement, model, optimizer, best_loss, is_best)
