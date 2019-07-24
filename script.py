@@ -4,8 +4,8 @@ import importlib
 from collections import namedtuple
 import numpy as np
 import rrc_evaluation_funcs
-import Polygon as plg
 
+from shapely.geometry import Polygon as plg
 
 def evaluation_imports():
     """
