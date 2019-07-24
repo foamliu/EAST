@@ -149,8 +149,11 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
     # print('len(gt): ' + str(len(gt)))
     # print('gt[1]: ' + str(gt['1']))
     subm = rrc_evaluation_funcs.load_zip_file(submFilePath, evaluationParams['DET_SAMPLE_NAME_2_ID'], True)
-    # subm = rrc_evaluation_funcs.load_folder(submFilePath, evaluationParams['DET_SAMPLE_NAME_2_ID'], True)
-    # print('subm[1]: ' + str(subm['1']))
+    print('len(subm): ' + str(len(subm)))
+    print('subm[1]: ' + str(subm['1']))
+    subm = rrc_evaluation_funcs.load_folder(submFilePath, evaluationParams['DET_SAMPLE_NAME_2_ID'], True)
+    print('len(subm): ' + str(len(subm)))
+    print('subm[1]: ' + str(subm['1']))
 
     numGlobalCareGt = 0
     numGlobalCareDet = 0
