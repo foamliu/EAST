@@ -152,7 +152,7 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
     print('len(subm): ' + str(len(subm)))
     for i in subm.items():
         print(i)
-    subm = rrc_evaluation_funcs.load_folder('data/result/epoch_0_gt', evaluationParams['DET_SAMPLE_NAME_2_ID'], True)
+    subm = rrc_evaluation_funcs.load_folder('data/result/epoch_0_gt', evaluationParams['DET_SAMPLE_NAME_2_ID'])
     print('len(subm): ' + str(len(subm)))
     for i in subm.items():
         print(i)
