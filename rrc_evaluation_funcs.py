@@ -92,7 +92,7 @@ def load_folder(folder, fileNameRegExp=''):
                     keyName = m.group(1)
 
         filename = os.path.join(folder, name)
-        with open(filename, 'r') as file:
+        with open(filename, 'rb') as file:
             pairs.append([keyName, file.read()])
 
     return dict(pairs)
