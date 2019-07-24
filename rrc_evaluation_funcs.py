@@ -77,12 +77,11 @@ def load_zip_file(file, fileNameRegExp='', allEntries=False):
     return dict(pairs)
 
 
-def load_folder(folder, fileNameRegExp='', allEntries=False):
+def load_folder(folder, fileNameRegExp=''):
     namelist = [n for n in os.listdir(folder)]
 
     pairs = []
     for name in namelist:
-        addFile = True
         keyName = name
         if fileNameRegExp != "":
             m = re.match(fileNameRegExp, name)
@@ -92,13 +91,9 @@ def load_folder(folder, fileNameRegExp='', allEntries=False):
                 if len(m.groups()) > 0:
                     keyName = m.group(1)
 
-        if addFile:
-            filename = os.path.join(folder, name)
-            with open(filename, 'r') as file:
-                pairs.append([keyName, file.read()])
-        else:
-            if allEntries:
-                raise Exception('ZIP entry not valid: %s' % name)
+        filename = os.path.join(folder, name)
+        with open(filename, 'r') as file:
+            pairs.append([keyName, file.read()])
 
     return dict(pairs)
 
