@@ -3,13 +3,12 @@ import torch
 from tensorboardX import SummaryWriter
 from torch import nn
 
-import rrc_evaluation_funcs
 from config import device, grad_clip, print_freq, num_workers
 from data_gen import EastDataset, collate_fn
 from eval import predict
 from loss import LossFunc
 from models import EastModel
-from script import default_evaluation_params, validate_data, evaluate_method
+from script import default_evaluation_params, evaluate_method
 from utils import parse_args, save_checkpoint, AverageMeter, clip_gradient, get_logger, get_learning_rate, \
     adjust_learning_rate
 
@@ -19,7 +18,7 @@ def train_net(args):
     np.random.seed(7)
     checkpoint = args.checkpoint
     start_epoch = 0
-    best_loss = float("inf")
+    best_hmean = 0
     writer = SummaryWriter()
     epochs_since_improvement = 0
     decays_since_improvement = 0
@@ -86,15 +85,12 @@ def train_net(args):
         writer.add_scalar('Learning_Rate', effective_lr, epoch)
 
         # One epoch's validation
-        test_loss = compute_hmean(test_loader=test_loader,
-                                  model=model,
-                                  criterion=criterion,
-                                  logger=logger)
-        writer.add_scalar('Valid_Loss', test_loss, epoch)
+        test_hmean = compute_hmean(model=model)
+        writer.add_scalar('hmean', test_hmean, epoch)
 
         # Check if there was an improvement
-        is_best = test_loss < best_loss
-        best_loss = min(test_loss, best_loss)
+        is_best = test_hmean > best_hmean
+        best_hmean = max(test_hmean, best_hmean)
         if not is_best:
             epochs_since_improvement += 1
             print("\nEpochs since last improvement: %d\n" % (epochs_since_improvement,))
@@ -103,7 +99,7 @@ def train_net(args):
             decays_since_improvement = 0
 
         # Save checkpoint
-        save_checkpoint(epoch, epochs_since_improvement, model, optimizer, best_loss, is_best)
+        save_checkpoint(epoch, epochs_since_improvement, model, optimizer, best_hmean, is_best)
 
 
 def train(train_loader, model, criterion, optimizer, epoch, logger):
