@@ -211,6 +211,7 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
         if resFile in subm:
 
             detFile = rrc_evaluation_funcs.decode_utf8(subm[resFile])
+            print(resFile)
 
             pointsList, confidencesList, _ = rrc_evaluation_funcs.get_tl_line_values_from_file_contents(detFile,
                                                                                                         evaluationParams[
