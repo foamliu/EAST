@@ -95,7 +95,7 @@ def load_folder(folder, fileNameRegExp='', allEntries=False):
         if addFile:
             filename = os.path.join(folder, name)
             with open(filename, 'r') as file:
-                pairs.append([keyName, file.readlines()])
+                pairs.append([keyName, file.read()])
         else:
             if allEntries:
                 raise Exception('ZIP entry not valid: %s' % name)
