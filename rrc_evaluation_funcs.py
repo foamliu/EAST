@@ -332,6 +332,7 @@ def main_evaluation(p, default_evaluation_params_fn, validate_data_fn, evaluate_
     except Exception as e:
         resDict['Message'] = str(e)
         resDict['calculated'] = False
+        print(e)
 
     if 'o' in p:
         if not os.path.exists(p['o']):
