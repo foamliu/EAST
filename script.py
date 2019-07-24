@@ -148,16 +148,10 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
     gt = rrc_evaluation_funcs.load_zip_file(gtFilePath, evaluationParams['GT_SAMPLE_NAME_2_ID'])
     # print('len(gt): ' + str(len(gt)))
     # print('gt[1]: ' + str(gt['1']))
-    subm = rrc_evaluation_funcs.load_zip_file(submFilePath, evaluationParams['DET_SAMPLE_NAME_2_ID'], True)
-    print('len(subm): ' + str(len(subm)))
-    for i in subm.items():
-        print(i)
-        break
-    # subm = rrc_evaluation_funcs.load_folder('data/result/epoch_0_gt', evaluationParams['DET_SAMPLE_NAME_2_ID'])
-    # print('len(subm): ' + str(len(subm)))
-    # for i in subm.items():
-    #     print(i)
-    #     break
+    # subm = rrc_evaluation_funcs.load_zip_file(submFilePath, evaluationParams['DET_SAMPLE_NAME_2_ID'], True)
+
+    subm = rrc_evaluation_funcs.load_folder(submFilePath, evaluationParams['DET_SAMPLE_NAME_2_ID'])
+
 
     numGlobalCareGt = 0
     numGlobalCareDet = 0
@@ -342,13 +336,13 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
 
 
 if __name__ == '__main__':
-    rrc_evaluation_funcs.main_evaluation(None, default_evaluation_params, validate_data, evaluate_method)
+    # rrc_evaluation_funcs.main_evaluation(None, default_evaluation_params, validate_data, evaluate_method)
 
-    # evalParams = default_evaluation_params()
-    # gtFilePath = 'gt.zip'
-    # submFilePath = 'data/result/epoch_0_gt'
-    # resDict = {'calculated': True, 'Message': '', 'method': '{}', 'per_sample': '{}'}
-    # evalData = evaluate_method(gtFilePath, submFilePath, evalParams)
-    # resDict.update(evalData)
-    # print("Calculated!")
-    # print(json.dumps(resDict['method']))
+    evalParams = default_evaluation_params()
+    gtFilePath = 'gt.zip'
+    submFilePath = 'data/result/epoch_0_gt'
+    resDict = {'calculated': True, 'Message': '', 'method': '{}', 'per_sample': '{}'}
+    evalData = evaluate_method(gtFilePath, submFilePath, evalParams)
+    resDict.update(evalData)
+    print("Calculated!")
+    print(resDict['method'])

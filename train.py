@@ -176,6 +176,15 @@ def compute_hmean(model):
     evalParams = default_evaluation_params()
     gtFilePath = 'gt.zip'
     submFilePath = 'data/result/epoch_0_gt'
+    resDict = {'calculated': True, 'Message': '', 'method': '{}', 'per_sample': '{}'}
+    evalData = evaluate_method(gtFilePath, submFilePath, evalParams)
+    resDict.update(evalData)
+    print("Calculated!")
+    print(json.dumps(resDict['method']))
+
+    evalParams = default_evaluation_params()
+    gtFilePath = 'gt.zip'
+    submFilePath = 'data/result/epoch_0_gt'
     evalData = evaluate_method(gtFilePath, submFilePath, evalParams)
     print(evalData)
     return evalData['hmean']
