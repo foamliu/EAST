@@ -143,31 +143,31 @@ def train(train_loader, model, criterion, optimizer, epoch, logger):
 
 
 # def test(test_loader, model, criterion, logger):
-# #     model.eval()  # train mode (dropout and batchnorm is used)
-# #
-# #     losses = AverageMeter()
-# #
-# #     # Batches
-# #     for img, score_map, geo_map, training_mask in tqdm(test_loader):
-# #         # Move to GPU, if available
-# #         img = img.to(device)
-# #         score_map = score_map.to(device)
-# #         geo_map = geo_map.to(device)
-# #         training_mask = training_mask.to(device)
-# #
-# #         # Forward prop.
-# #         f_score, f_geometry = model(img)
-# #
-# #         # Calculate loss
-# #         loss = criterion(score_map, f_score, geo_map, f_geometry, training_mask)
-# #
-# #         # Keep track of metrics
-# #         losses.update(loss.item(), img.size(0))
-# #
-# #     # Print status
-# #     logger.info('TEST Loss {loss.val:.4f} ({loss.avg:.4f})\n'.format(loss=losses))
-# #
-# #     return losses.avg
+#     model.eval()  # train mode (dropout and batchnorm is used)
+#
+#     losses = AverageMeter()
+#
+#     # Batches
+#     for img, score_map, geo_map, training_mask in tqdm(test_loader):
+#         # Move to GPU, if available
+#         img = img.to(device)
+#         score_map = score_map.to(device)
+#         geo_map = geo_map.to(device)
+#         training_mask = training_mask.to(device)
+#
+#         # Forward prop.
+#         f_score, f_geometry = model(img)
+#
+#         # Calculate loss
+#         loss = criterion(score_map, f_score, geo_map, f_geometry, training_mask)
+#
+#         # Keep track of metrics
+#         losses.update(loss.item(), img.size(0))
+#
+#     # Print status
+#     logger.info('TEST Loss {loss.val:.4f} ({loss.avg:.4f})\n'.format(loss=losses))
+#
+#     return losses.avg
 
 def compute_hmean(model):
     model.eval()

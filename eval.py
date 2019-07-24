@@ -230,7 +230,8 @@ def save_box(box_List, image, img_path):
 
 def predict(model, epoch):
     # prepare output directory
-    print('EAST <==> TEST <==> Create Res_file and Img_with_box <==> Begin')
+    # print('EAST <==> TEST <==> Create Res_file and Img_with_box <==> Begin')
+    print('Locating texts in TEST SET...')
     if not os.path.exists(result_root):
         os.mkdir(result_root)
 
