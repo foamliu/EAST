@@ -355,11 +355,11 @@ def main_evaluation(p, default_evaluation_params_fn, validate_data_fn, evaluate_
 
     if 'o' in p:
         if per_sample == True:
-            for k, v in evalData['per_sample'].iteritems():
+            for k, v in evalData['per_sample'].items():
                 outZip.writestr(k + '.json', json.dumps(v))
 
             if 'output_items' in evalData.keys():
-                for k, v in evalData['output_items'].iteritems():
+                for k, v in evalData['output_items'].items():
                     outZip.writestr(k, v)
 
         outZip.close()
