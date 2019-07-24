@@ -324,15 +324,15 @@ def main_evaluation(p, default_evaluation_params_fn, validate_data_fn, evaluate_
         evalParams.update(p['p'] if isinstance(p['p'], dict) else json.loads(p['p'][1:-1]))
 
     resDict = {'calculated': True, 'Message': '', 'method': '{}', 'per_sample': '{}'}
-    try:
-        validate_data_fn(p['g'], p['s'], evalParams)
-        evalData = evaluate_method_fn(p['g'], p['s'], evalParams)
-        resDict.update(evalData)
+    # try:
+    validate_data_fn(p['g'], p['s'], evalParams)
+    evalData = evaluate_method_fn(p['g'], p['s'], evalParams)
+    resDict.update(evalData)
 
-    except Exception as e:
-        resDict['Message'] = str(e)
-        resDict['calculated'] = False
-        print(e)
+    # except Exception as e:
+    #     resDict['Message'] = str(e)
+    #     resDict['calculated'] = False
+    #     print(e)
 
     if 'o' in p:
         if not os.path.exists(p['o']):
