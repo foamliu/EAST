@@ -77,6 +77,32 @@ def load_zip_file(file, fileNameRegExp='', allEntries=False):
     return dict(pairs)
 
 
+def load_folder(folder, fileNameRegExp='', allEntries=False):
+    namelist = [n for n in os.listdir(folder)]
+
+    pairs = []
+    for name in namelist:
+        addFile = True
+        keyName = name
+        if fileNameRegExp != "":
+            m = re.match(fileNameRegExp, name)
+            if m == None:
+                addFile = False
+            else:
+                if len(m.groups()) > 0:
+                    keyName = m.group(1)
+
+        if addFile:
+            filename = os.path.join(folder, name)
+            with open(filename, 'r') as file:
+                pairs.append([keyName, file.readlines()])
+        else:
+            if allEntries:
+                raise Exception('ZIP entry not valid: %s' % name)
+
+    return dict(pairs)
+
+
 def decode_utf8(raw):
     """
     Returns a Unicode object on success, or None on failure
@@ -388,4 +414,3 @@ def main_validation(default_evaluation_params_fn, validate_data_fn):
         sys.exit(0)
     except Exception as e:
         print(str(e))
-

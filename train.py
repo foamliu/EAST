@@ -2,12 +2,14 @@ import numpy as np
 import torch
 from tensorboardX import SummaryWriter
 from torch import nn
-from tqdm import tqdm
 
+import rrc_evaluation_funcs
 from config import device, grad_clip, print_freq, num_workers
 from data_gen import EastDataset, collate_fn
+from eval import predict
 from loss import LossFunc
 from models import EastModel
+from script import default_evaluation_params, validate_data, evaluate_method
 from utils import parse_args, save_checkpoint, AverageMeter, clip_gradient, get_logger, get_learning_rate, \
     adjust_learning_rate
 
@@ -84,10 +86,10 @@ def train_net(args):
         writer.add_scalar('Learning_Rate', effective_lr, epoch)
 
         # One epoch's validation
-        test_loss = test(test_loader=test_loader,
-                         model=model,
-                         criterion=criterion,
-                         logger=logger)
+        test_loss = compute_hmean(test_loader=test_loader,
+                                  model=model,
+                                  criterion=criterion,
+                                  logger=logger)
         writer.add_scalar('Valid_Loss', test_loss, epoch)
 
         # Check if there was an improvement
@@ -144,32 +146,43 @@ def train(train_loader, model, criterion, optimizer, epoch, logger):
     return losses.avg
 
 
-def test(test_loader, model, criterion, logger):
-    model.eval()  # train mode (dropout and batchnorm is used)
+# def test(test_loader, model, criterion, logger):
+# #     model.eval()  # train mode (dropout and batchnorm is used)
+# #
+# #     losses = AverageMeter()
+# #
+# #     # Batches
+# #     for img, score_map, geo_map, training_mask in tqdm(test_loader):
+# #         # Move to GPU, if available
+# #         img = img.to(device)
+# #         score_map = score_map.to(device)
+# #         geo_map = geo_map.to(device)
+# #         training_mask = training_mask.to(device)
+# #
+# #         # Forward prop.
+# #         f_score, f_geometry = model(img)
+# #
+# #         # Calculate loss
+# #         loss = criterion(score_map, f_score, geo_map, f_geometry, training_mask)
+# #
+# #         # Keep track of metrics
+# #         losses.update(loss.item(), img.size(0))
+# #
+# #     # Print status
+# #     logger.info('TEST Loss {loss.val:.4f} ({loss.avg:.4f})\n'.format(loss=losses))
+# #
+# #     return losses.avg
 
-    losses = AverageMeter()
+def compute_hmean(model):
+    model.eval()
+    predict(model, 0)
 
-    # Batches
-    for img, score_map, geo_map, training_mask in tqdm(test_loader):
-        # Move to GPU, if available
-        img = img.to(device)
-        score_map = score_map.to(device)
-        geo_map = geo_map.to(device)
-        training_mask = training_mask.to(device)
-
-        # Forward prop.
-        f_score, f_geometry = model(img)
-
-        # Calculate loss
-        loss = criterion(score_map, f_score, geo_map, f_geometry, training_mask)
-
-        # Keep track of metrics
-        losses.update(loss.item(), img.size(0))
-
-    # Print status
-    logger.info('TEST Loss {loss.val:.4f} ({loss.avg:.4f})\n'.format(loss=losses))
-
-    return losses.avg
+    evalParams = default_evaluation_params()
+    gtFilePath = 'gt.zip'
+    submFilePath = 'data/result/epoch_0_gt'
+    evalData = evaluate_method(gtFilePath, submFilePath, evalParams)
+    print(evalData)
+    return evalData['hmean']
 
 
 def main():
