@@ -307,7 +307,10 @@ def get_tl_line_values_from_file_contents(content, CRLF=True, LTRB=True, withTra
     transcriptionsList = []
     confidencesList = []
 
-    lines = content.split("\r\n" if CRLF else "\n")
+    if content is not None:
+        lines = content.split("\r\n" if CRLF else "\n")
+    else:
+        lines = []
     for line in lines:
         line = line.replace("\r", "").replace("\n", "")
         if line != "":

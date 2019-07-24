@@ -161,8 +161,6 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
         # print('resFile: ' + str(resFile))
 
         gtFile = rrc_evaluation_funcs.decode_utf8(gt[resFile])
-        if gtFile is None:
-            gtFile = ''
         recall = 0
         precision = 0
         hmean = 0
