@@ -117,10 +117,8 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
             return 0
 
     def get_intersection(pD, pG):
-        pInt = pD & pG
-        if len(pInt) == 0:
-            return 0
-        return pInt.area()
+        pInt = pD.intersection(pG)
+        return pInt.area
 
     def compute_ap(confList, matchList, numGtCare):
         correct = 0
