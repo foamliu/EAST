@@ -85,7 +85,7 @@ def parse_args():
     parser.add_argument('--pretrained', type=bool, default=True, help='pretrained model')
     parser.add_argument('--input-size', type=int, default=512, help='image input size.')
     parser.add_argument('--batch-size-per-gpu', type=int, default=14, help='batch size in each context')
-    parser.add_argument('--num-gpus', type=int, default=2, help='number of gpus')
+    parser.add_argument('--num-gpus', type=int, default=1, help='number of gpus')
     parser.add_argument('--lr', type=float, default=0.001, help='start learning rate')
     parser.add_argument('--lr-step', type=int, default=10, help='period of learning rate decay')
     parser.add_argument('--optimizer', default='sgd', help='optimizer')
