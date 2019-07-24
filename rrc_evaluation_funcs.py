@@ -94,9 +94,9 @@ def load_folder(folder, fileNameRegExp='', allEntries=False):
 
         if addFile:
             filename = os.path.join(folder, name)
+            print('filename: ' + filename)
+            print('keyName: ' + keyName)
             with open(filename, 'r') as file:
-                print(filename)
-                print(keyName)
                 pairs.append([keyName, file.readlines()])
         else:
             if allEntries:
@@ -309,7 +309,6 @@ def get_tl_line_values_from_file_contents(content, CRLF=True, LTRB=True, withTra
     transcriptionsList = []
     confidencesList = []
 
-    print(content)
     lines = content.split("\r\n" if CRLF else "\n")
     for line in lines:
         line = line.replace("\r", "").replace("\n", "")
