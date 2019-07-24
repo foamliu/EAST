@@ -150,10 +150,10 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
     # print('gt[1]: ' + str(gt['1']))
     subm = rrc_evaluation_funcs.load_zip_file(submFilePath, evaluationParams['DET_SAMPLE_NAME_2_ID'], True)
     print('len(subm): ' + str(len(subm)))
-    print('subm.items()[2]: ' + str(subm.items()[2]))
+    print('subm.keys()[2]: ' + str(subm.keys()[2]))
     subm = rrc_evaluation_funcs.load_folder('data/result/epoch_0_gt', evaluationParams['DET_SAMPLE_NAME_2_ID'], True)
     print('len(subm): ' + str(len(subm)))
-    print('subm.items()[2]: ' + str(subm.items()[2]))
+    print('subm.keys()[2]: ' + str(subm.keys()[2]))
 
     numGlobalCareGt = 0
     numGlobalCareDet = 0
