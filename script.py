@@ -14,7 +14,7 @@ def evaluation_imports():
     evaluation_imports: Dictionary ( key = module name , value = alias  )  with python modules used in the evaluation. 
     """
     return {
-        'Polygon': 'plg',
+        'shapely.geometry': 'plg',
         'numpy': 'np'
     }
 
