@@ -106,9 +106,7 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
         return points
 
     def get_union(pD, pG):
-        areaA = pD.area()
-        areaB = pG.area()
-        return areaA + areaB - get_intersection(pD, pG)
+        return pD.union(pG).area
 
     def get_intersection_over_union(pD, pG):
         try:
