@@ -231,14 +231,14 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
                     detPol = rectangle_to_polygon(detRect)
                 else:
                     detPol = polygon_from_points(points)
-                print(type(detPol))
+
                 detPols.append(detPol)
                 detPolPoints.append(points)
                 if len(gtDontCarePolsNum) > 0:
                     for dontCarePol in gtDontCarePolsNum:
                         dontCarePol = gtPols[dontCarePol]
                         intersected_area = get_intersection(dontCarePol, detPol)
-                        pdDimensions = detPol.area()
+                        pdDimensions = detPol.area
                         precision = 0 if pdDimensions == 0 else intersected_area / pdDimensions
                         if (precision > evaluationParams['AREA_PRECISION_CONSTRAINT']):
                             detDontCarePolsNum.append(len(detPols) - 1)
