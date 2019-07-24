@@ -53,16 +53,16 @@ def train_net(args):
     train_dataset = EastDataset('train')
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=args.batch_size_per_gpu * args.num_gpus,
                                                shuffle=True, num_workers=num_workers, collate_fn=collate_fn)
-    test_dataset = EastDataset('test')
-    test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=args.batch_size_per_gpu * args.num_gpus,
-                                              shuffle=False, num_workers=num_workers, collate_fn=collate_fn)
+    # test_dataset = EastDataset('test')
+    # test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=args.batch_size_per_gpu * args.num_gpus,
+    #                                           shuffle=False, num_workers=num_workers, collate_fn=collate_fn)
 
     # Epochs
     for epoch in range(start_epoch, args.end_epoch):
         # Decay learning rate if there is no improvement for 4 consecutive epochs, and terminate training after 20
-        if epochs_since_improvement == 10:
+        if args.optimizer == 'sgd' and epochs_since_improvement == 10:
             break
-        if epochs_since_improvement > 0 and epochs_since_improvement % 2 == 0:
+        if args.optimizer == 'sgd' and epochs_since_improvement > 0 and epochs_since_improvement % 2 == 0:
             checkpoint = 'BEST_checkpoint.tar'
             checkpoint = torch.load(checkpoint)
             model = checkpoint['model']
