@@ -106,13 +106,13 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
         return points
 
     def get_union(pD, pG):
-        areaA = pD.area();
-        areaB = pG.area();
-        return areaA + areaB - get_intersection(pD, pG);
+        areaA = pD.area()
+        areaB = pG.area()
+        return areaA + areaB - get_intersection(pD, pG)
 
     def get_intersection_over_union(pD, pG):
         try:
-            return get_intersection(pD, pG) / get_union(pD, pG);
+            return get_intersection(pD, pG) / get_union(pD, pG)
         except:
             return 0
 
@@ -151,11 +151,11 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
     gt = rrc_evaluation_funcs.load_zip_file(gtFilePath, evaluationParams['GT_SAMPLE_NAME_2_ID'])
     subm = rrc_evaluation_funcs.load_zip_file(submFilePath, evaluationParams['DET_SAMPLE_NAME_2_ID'], True)
 
-    numGlobalCareGt = 0;
-    numGlobalCareDet = 0;
+    numGlobalCareGt = 0
+    numGlobalCareDet = 0
 
-    arrGlobalConfidences = [];
-    arrGlobalMatches = [];
+    arrGlobalConfidences = []
+    arrGlobalMatches = []
 
     for resFile in gt:
 
@@ -182,9 +182,9 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
         pairs = []
         detMatchedNums = []
 
-        arrSampleConfidences = [];
-        arrSampleMatch = [];
-        sampleAP = 0;
+        arrSampleConfidences = []
+        arrSampleMatch = []
+        sampleAP = 0
 
         evaluationLog = ""
 
@@ -279,8 +279,8 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
                         arrSampleConfidences.append(confidencesList[detNum])
                         arrSampleMatch.append(match)
 
-                        arrGlobalConfidences.append(confidencesList[detNum]);
-                        arrGlobalMatches.append(match);
+                        arrGlobalConfidences.append(confidencesList[detNum])
+                        arrGlobalMatches.append(match)
 
         numGtCare = (len(gtPols) - len(gtDontCarePolsNum))
         numDetCare = (len(detPols) - len(detDontCarePolsNum))
@@ -330,7 +330,7 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
 
     resDict = {'calculated': True, 'Message': '', 'method': methodMetrics, 'per_sample': perSampleMetrics}
 
-    return resDict;
+    return resDict
 
 
 if __name__ == '__main__':

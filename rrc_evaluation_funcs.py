@@ -311,6 +311,7 @@ def main_evaluation(p, default_evaluation_params_fn, validate_data_fn, evaluate_
     validate_data_fn: points to a method that validates the corrct format of the submission
     evaluate_method_fn: points to a function that evaluated the submission and return a Dictionary with the results
     """
+    print(sys.argv)
 
     if (p == None):
         p = dict([s[1:].split('=') for s in sys.argv[1:]])
