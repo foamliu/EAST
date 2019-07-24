@@ -159,8 +159,6 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
     arrGlobalMatches = []
 
     for resFile in gt:
-        # print('resFile: ' + str(resFile))
-
         gtFile = rrc_evaluation_funcs.decode_utf8(gt[resFile])
         recall = 0
         precision = 0
@@ -216,7 +214,6 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
         if resFile in subm:
 
             detFile = rrc_evaluation_funcs.decode_utf8(subm[resFile])
-            print('resFile: ' + str(resFile))
 
             pointsList, confidencesList, _ = rrc_evaluation_funcs.get_tl_line_values_from_file_contents(detFile,
                                                                                                         evaluationParams[
@@ -338,13 +335,13 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
 
 
 if __name__ == '__main__':
-    # rrc_evaluation_funcs.main_evaluation(None, default_evaluation_params, validate_data, evaluate_method)
+    rrc_evaluation_funcs.main_evaluation(None, default_evaluation_params, validate_data, evaluate_method)
 
-    evalParams = default_evaluation_params()
-    gtFilePath = 'gt.zip'
-    submFilePath = 'data/result/epoch_0_gt'
-    resDict = {'calculated': True, 'Message': '', 'method': '{}', 'per_sample': '{}'}
-    evalData = evaluate_method(gtFilePath, submFilePath, evalParams)
-    resDict.update(evalData)
-    print("Calculated!")
-    print(json.dumps(resDict['method']))
+    # evalParams = default_evaluation_params()
+    # gtFilePath = 'gt.zip'
+    # submFilePath = 'data/result/epoch_0_gt'
+    # resDict = {'calculated': True, 'Message': '', 'method': '{}', 'per_sample': '{}'}
+    # evalData = evaluate_method(gtFilePath, submFilePath, evalParams)
+    # resDict.update(evalData)
+    # print("Calculated!")
+    # print(json.dumps(resDict['method']))
