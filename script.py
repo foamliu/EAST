@@ -231,6 +231,7 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
                     detPol = rectangle_to_polygon(detRect)
                 else:
                     detPol = polygon_from_points(points)
+                print(type(detPol))
                 detPols.append(detPol)
                 detPolPoints.append(points)
                 if len(gtDontCarePolsNum) > 0:
