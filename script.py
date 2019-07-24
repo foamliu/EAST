@@ -2,10 +2,12 @@
 # -*- coding: utf-8 -*-
 import importlib
 from collections import namedtuple
+
 import numpy as np
+from shapely.geometry import Polygon as plg
+
 import rrc_evaluation_funcs
 
-from shapely.geometry import Polygon as plg
 
 def evaluation_imports():
     """
@@ -322,7 +324,7 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
     methodRecall = 0 if numGlobalCareGt == 0 else float(matchedSum) / numGlobalCareGt
     methodPrecision = 0 if numGlobalCareDet == 0 else float(matchedSum) / numGlobalCareDet
     methodHmean = 0 if methodRecall + methodPrecision == 0 else 2 * methodRecall * methodPrecision / (
-                methodRecall + methodPrecision)
+            methodRecall + methodPrecision)
 
     methodMetrics = {'precision': methodPrecision, 'recall': methodRecall, 'hmean': methodHmean, 'AP': AP}
 
