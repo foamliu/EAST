@@ -389,4 +389,4 @@ def main_validation(default_evaluation_params_fn, validate_data_fn):
         sys.exit(0)
     except Exception as e:
         print(str(e))
-        sys.exit(101)
+
