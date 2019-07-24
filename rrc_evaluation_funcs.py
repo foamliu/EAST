@@ -363,8 +363,9 @@ def main_evaluation(p, default_evaluation_params_fn, validate_data_fn, evaluate_
         outZip.close()
 
     if show_result:
-        sys.stdout.write("Calculated!")
+        sys.stdout.write("Calculated!\n")
         sys.stdout.write(json.dumps(resDict['method']))
+        sys.stdout.write('\n')
 
     return resDict
 
