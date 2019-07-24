@@ -59,7 +59,7 @@ def train_net(args):
 
     # Epochs
     for epoch in range(start_epoch, args.end_epoch):
-        # Decay learning rate if there is no improvement for 4 consecutive epochs, and terminate training after 20
+        # Decay learning rate if there is no improvement for 2 consecutive epochs, and terminate training after 10
         if args.optimizer == 'sgd' and epochs_since_improvement == 10:
             break
         if args.optimizer == 'sgd' and epochs_since_improvement > 0 and epochs_since_improvement % 2 == 0:
