@@ -333,4 +333,10 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
 
 
 if __name__ == '__main__':
-    rrc_evaluation_funcs.main_evaluation(None, default_evaluation_params, validate_data, evaluate_method)
+    # rrc_evaluation_funcs.main_evaluation(None, default_evaluation_params, validate_data, evaluate_method)
+
+    evalParams = default_evaluation_params()
+    gtFilePath = 'gt.zip'
+    submFilePath = 'data/result/epoch_0_gt'
+    evalData = evaluate_method(gtFilePath, submFilePath, evalParams)
+    print(evalData)
