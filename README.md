@@ -22,7 +22,7 @@ This is a PyTorch re-implementation of EAST: An Efficient and Accurate Scene Tex
 
 ![image](https://github.com/foamliu/EAST/raw/master/images/Results_IoU.png)
 
-[Link](https://rrc.cvc.uab.es/?ch=4&com=evaluation&view=method_info&task=1&m=60628)
+[Link](https://rrc.cvc.uab.es/?ch=4&com=evaluation&view=method_info&task=1&m=61493)
 
 ### Offline evaluation
 
