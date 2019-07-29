@@ -91,7 +91,7 @@ def parse_args():
     parser.add_argument('--weight-decay', type=float, default=0.0, help='weight decay')
     parser.add_argument('--moving-average-decay', type=float, default=0.997, help='moving average decay')
     parser.add_argument('--mom', type=float, default=0.9, help='momentum')
-    parser.add_argument('--end-epoch', type=int, default=1000, help='training epoch size.')
+    parser.add_argument('--end-epoch', type=int, default=10000, help='training epoch size.')
     parser.add_argument('--checkpoint', type=str, default=None, help='checkpoint')
 
     args = parser.parse_args()
