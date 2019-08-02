@@ -23,7 +23,7 @@ The features are summarized blow:
 
 ![image](https://github.com/foamliu/EAST/raw/master/images/Results_IoU.png)
 
-[Link](https://rrc.cvc.uab.es/?ch=4&com=evaluation&view=method_info&task=1&m=61493)
+[Link](https://rrc.cvc.uab.es/?ch=4&com=evaluation&task=1)
 
 ### Offline evaluation
 
