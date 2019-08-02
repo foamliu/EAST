@@ -18,7 +18,7 @@ This is a PyTorch re-implementation of EAST: An Efficient and Accurate Scene Tex
 
 |Model|Recall|Precision|Hmean|Download|
 |---|---|---|---|---|
-|PyTorch re-implementation of EAST|74.48%|90.25%|81.61%|[Link](https://github.com/foamliu/EAST/releases/download/v1.0/BEST_checkpoint.tar)
+|PyTorch re-implementation of EAST|74.48%|90.26%|81.61%|[Link](https://github.com/foamliu/EAST/releases/download/v1.0/BEST_checkpoint.tar)
 
 ![image](https://github.com/foamliu/EAST/raw/master/images/Results_IoU.png)
 
