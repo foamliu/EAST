@@ -2,11 +2,12 @@
 
 ## Introduction
 
-This is a PyTorch re-implementation of EAST: An Efficient and Accurate Scene Text Detector ([paper](https://arxiv.org/abs/1704.03155)). The features are summarized blow:
+This is a PyTorch re-implementation of EAST: An Efficient and Accurate Scene Text Detector ([paper](https://arxiv.org/abs/1704.03155)). 
 
+The features are summarized blow:
 - Only RBOX part is implemented.
 - A fast Locality-Aware NMS in C++ provided by the paper's author.
-- The pre-trained model provided achieves 80.83 F1-score on ICDAR 2015 Incidental Scene Text Detection Challenge using only training images from ICDAR 2015 and 2013. see here for the detailed results.
+- The pre-trained model provided achieves 81.61 F1-score on ICDAR 2015 Incidental Scene Text Detection Challenge using only training images from ICDAR 2015 and 2013. see here for the detailed results.
 - Differences from original paper
     - Use ResNet-50 rather than PVANET
     - Use dice loss (optimize IoU of segmentation) rather than balanced cross entropy
