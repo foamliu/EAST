@@ -66,6 +66,9 @@ If you want to visualize during training, run in your terminal:
 $ tensorboard --logdir runs
 ```
 
+![image](https://github.com/foamliu/EAST/raw/master/images/train_loss.png)
+![image](https://github.com/foamliu/EAST/raw/master/images/hmean.png)
+
 ### Demo
 Pick 10 random test examples from ICDAR-2015:
 ```bash
