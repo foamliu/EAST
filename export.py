@@ -12,8 +12,6 @@ if __name__ == '__main__':
     print('elapsed {} sec'.format(time.time() - start))
     model = checkpoint['model'].module
     print(type(model))
-    print('use_se: ' + str(model.use_se))
-    print('fc: ' + str(model.fc))
 
     # model.eval()
     filename = 'insight-face-v3.pt'
