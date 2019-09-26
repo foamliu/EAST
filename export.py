@@ -14,7 +14,7 @@ if __name__ == '__main__':
     print(type(model))
 
     # model.eval()
-    filename = 'insight-face-v3.pt'
+    filename = 'east.pt'
     print('saving {}...'.format(filename))
     start = time.time()
     torch.save(model.state_dict(), filename)
